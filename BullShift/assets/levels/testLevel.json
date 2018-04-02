@@ -1,0 +1,89 @@
+﻿{
+  "name": "Test Level",
+  "scene": {
+    "objects": [
+      {
+        "name": "bg_0",
+        "x": 0,
+        "y": 0,
+        "components": [
+          "testBgSpriteComponent"
+        ]
+      },
+      {
+        "name": "bg_1",
+        "x": 32,
+        "y": 32,
+        "components": [
+          "testBgSpriteComponent"
+        ],
+        "children": [
+          {
+            "name": "bg_3",
+            "x": 96,
+            "y": 96,
+            "components": [
+              "testBgSpriteComponent"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "bg_2",
+        "x": 64,
+        "y": 64,
+        "components": [
+          "testBgSpriteComponent"
+        ]
+      },
+      {
+        "name": "player",
+        "x": 64,
+        "y": 0,
+        "components": [
+          "playerSpriteComponent",
+          "playerMoveComponent"
+        ]
+      }
+    ]
+  },
+  "components": {
+    "sprite": [
+      {
+        "name": "testBgSpriteComponent",
+        "asset": "assets/background.png"
+      },
+      {
+        "name": "playerSpriteComponent",
+        "asset": "assets/player.png"
+      }
+    ],
+    "move": [
+      {
+        "name": "playerMoveComponent",
+        "messages": [
+          {
+            "name": "Player:moveLeft",
+            "axis": "x",
+            "amount": -32
+          },
+          {
+            "name": "Player:moveRight",
+            "axis": "x",
+            "amount": 32
+          },
+          {
+            "name": "Player:moveUp",
+            "axis": "y",
+            "amount": -32
+          },
+          {
+            "name": "Player:moveDown",
+            "axis": "y",
+            "amount": 32
+          }
+        ]
+      }
+    ]
+  }
+}
