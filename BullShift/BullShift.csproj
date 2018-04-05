@@ -81,6 +81,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\crate.png" />
     <Content Include="assets\levels\testLevel.json" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
@@ -93,7 +94,6 @@
   <ItemGroup>
     <Content Include="assets\background.png" />
     <Content Include="assets\blocker.png" />
-    <Content Include="assets\create.png" />
     <Content Include="assets\ctrl_down.png" />
     <Content Include="assets\ctrl_left.png" />
     <Content Include="assets\ctrl_right.png" />
@@ -111,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="assetManager.ts" />
     <TypeScriptCompile Include="components\animatedSprite\animatedSpriteComponent.ts" />
     <TypeScriptCompile Include="components\baseGameObjectComponent.ts" />
     <TypeScriptCompile Include="components\ComponentManager.ts" />
