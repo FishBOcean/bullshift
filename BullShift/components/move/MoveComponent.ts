@@ -55,6 +55,10 @@ module BullShift {
         }
 
         public load(): void {
+
+            // Subscribe to messages here instead of the constructor because only components which are
+            // actually loaded should be subscribed. Otherwise, template instances of components will
+            // be registered for messages which in this component will cause errors to be thrown.
             let messageConfigs = ( this._config as MoveComponentConfig ).messages;
             for ( let m in messageConfigs ) {
                 let mcfg = messageConfigs[m];
@@ -67,12 +71,15 @@ module BullShift {
         }
 
         public clone(): MoveComponent {
-            let c = new MoveComponent( this._config as MoveComponentConfig );
-            c.name = this._config.name;
-            return c;
+            return new MoveComponent( this._config as MoveComponentConfig );
         }
 
         public onMessage( message: Message ): void {
+            if ( !this.gameObject ) {
+                console.warn( "Trying to process a message on a MoveComponent which has no attached game object." );
+                return;
+            }
+
             let matches = this._subscribedMessages.filter( x => x.name == message.name );
             if ( matches.length > 0 ) {
                 let msgCfg = matches[0];

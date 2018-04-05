@@ -37,6 +37,14 @@
         ]
       },
       {
+        "name": "animatedTestObj",
+        "x:" 128,
+        "y:" 128,
+        "components": [
+          "animatedTestComponent"
+        ]
+      },
+      {
         "name": "player",
         "x": 64,
         "y": 0,
@@ -56,6 +64,15 @@
       {
         "name": "playerSpriteComponent",
         "asset": "assets/player.png"
+      }
+    ],
+    "animatedSprite": [
+      {
+        "name": "animatedTestComponent",
+        "asset": "assets/animation_test.png",
+        "frameSizeX": 32,
+        "frameSizeY": 32,
+        "totalFrames": 4
       }
     ],
     "move": [

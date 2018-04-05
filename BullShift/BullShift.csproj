@@ -111,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="components\animatedSprite\animatedSpriteComponent.ts" />
     <TypeScriptCompile Include="components\baseGameObjectComponent.ts" />
     <TypeScriptCompile Include="components\ComponentManager.ts" />
     <TypeScriptCompile Include="components\IComponentConfig.ts" />

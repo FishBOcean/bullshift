@@ -5,6 +5,7 @@
         public getComponents( configuration: any ): ComponentDictionary {
             let components: ComponentDictionary = {};
 
+            // Regular sprites.
             if ( configuration.sprite ) {
                 for ( let s in configuration.sprite ) {
                     let config = new SpriteComponentConfig();
