@@ -69,8 +69,17 @@ module BullShift {
             return this._sprite.height;
         }
 
-        public load(): void {
+        public initialize( components: IGameObjectComponent ): void {
             this._sprite = PIXI.Sprite.fromImage( this._assetPath );
+            //this._sprite
+        }
+
+        public preloading(): boolean {
+            this._sprite.h
+        }
+
+        public load(): void {
+            
         }
 
         public update( dt: number ): void {

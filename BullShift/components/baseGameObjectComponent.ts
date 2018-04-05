@@ -1,6 +1,6 @@
 ﻿
 module BullShift {
-    export abstract class BaseGameObjectComponent {
+    export abstract class BaseGameObjectComponent implements IGameObjectComponent {
         public name: string;
         public gameObject: GameObject;
 
@@ -10,6 +10,10 @@ module BullShift {
             this.name = config.name;
             this._config = config;
         }
+
+        public abstract initialize( components: IGameObjectComponent ): void;
+
+        public abstract preloading(): boolean;
 
         public abstract load(): void;
 

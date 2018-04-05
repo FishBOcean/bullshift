@@ -54,6 +54,10 @@ module BullShift {
             super( config );
         }
 
+        public preloading(): boolean {
+            return false;
+        }
+
         public load(): void {
 
             // Subscribe to messages here instead of the constructor because only components which are

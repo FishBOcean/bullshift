@@ -4,6 +4,10 @@
         name: string;
         gameObject: GameObject;
 
+        initialize( components: IGameObjectComponent ): void;
+
+        preloading(): boolean;
+
         load(): void;
 
         update( dt: number ): void;
