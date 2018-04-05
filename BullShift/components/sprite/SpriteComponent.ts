@@ -1,4 +1,4 @@
-﻿/// <reference path="../igameobjectcomponent.ts" />
+﻿/// <reference path="../basegameobjectcomponent.ts" />
 
 module BullShift {
 
@@ -30,19 +30,14 @@ module BullShift {
         }
     }
 
-    export class SpriteComponent implements IRenderableComponent {
+    export class SpriteComponent extends BaseGameObjectComponent {
 
-        protected _config: SpriteComponentConfig;
         protected _sprite: PIXI.Sprite;
         protected _assetPath: string;
 
-        public name: string;
-        public gameObject: GameObject;
-
         public constructor( config: SpriteComponentConfig ) {
-            this._config = config;
+            super( config );
 
-            this.name = config.name;
             this._assetPath = config.assetPath;
         }
 
@@ -82,7 +77,7 @@ module BullShift {
         }
 
         public clone(): SpriteComponent {
-            return new SpriteComponent( this._config );
+            return new SpriteComponent( this._config as SpriteComponentConfig );
         }
     }
 }

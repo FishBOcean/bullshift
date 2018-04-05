@@ -1,4 +1,6 @@
-﻿module BullShift {
+﻿/// <reference path="../basegameobjectcomponent.ts" />
+
+module BullShift {
 
     export class MoveComponentMessageConfig {
         public name: string;
@@ -22,7 +24,6 @@
     }
 
     export class MoveComponentConfig implements IComponentConfig {
-
         public name;
 
         public messages: MoveComponentMessageConfig[] = [];
@@ -45,33 +46,29 @@
         }
     }
 
-    export class MoveComponent implements IGameObjectComponent, IMessageHandler {
+    export class MoveComponent extends BaseGameObjectComponent {
 
-        private _config: MoveComponentConfig;
         private _subscribedMessages: MoveComponentMessageConfig[] = [];
 
-        public name: string;
-        public gameObject: GameObject;
-
         public constructor( config: MoveComponentConfig ) {
-            this._config = config;
-            this.name = this._config.name;
-            for ( let m in config.messages ) {
-                let mcfg = config.messages[m];
-                this._subscribedMessages.push( mcfg );
-                Message.subscribe( mcfg.name, this );
-            }
+            super( config );
         }
 
         public load(): void {
+            let messageConfigs = ( this._config as MoveComponentConfig ).messages;
+            for ( let m in messageConfigs ) {
+                let mcfg = messageConfigs[m];
+                this._subscribedMessages.push( mcfg );
+                Message.subscribe( mcfg.name, this );
+            }
         }
 
         public update( dt: number ): void {
         }
 
         public clone(): MoveComponent {
-            let c = new MoveComponent( this._config );
-
+            let c = new MoveComponent( this._config as MoveComponentConfig );
+            c.name = "cloned_" + this._config.name;
             return c;
         }
 
