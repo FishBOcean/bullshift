@@ -68,7 +68,7 @@ module BullShift {
 
         public clone(): MoveComponent {
             let c = new MoveComponent( this._config as MoveComponentConfig );
-            c.name = "cloned_" + this._config.name;
+            c.name = this._config.name;
             return c;
         }
 
