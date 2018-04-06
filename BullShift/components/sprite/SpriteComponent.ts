@@ -33,6 +33,7 @@ module BullShift {
     export class SpriteComponent extends BaseGameObjectComponent {
 
         protected _sprite: PIXI.Sprite;
+        protected _textureAsset: TextureAsset;
         protected _assetPath: string;
 
         public constructor( config: SpriteComponentConfig ) {
@@ -69,17 +70,22 @@ module BullShift {
             return this._sprite.height;
         }
 
-        public initialize( components: IGameObjectComponent ): void {
-            this._sprite = PIXI.Sprite.fromImage( this._assetPath );
-            //this._sprite
+        public initialize( components: ComponentDictionary ): void {
+            console.log( "SpriteComponent initializing..." );
+            this._textureAsset = AssetManager.getAsset( this._assetPath ) as TextureAsset;
         }
 
         public preloading(): boolean {
-            this._sprite.h
+            return !this._textureAsset.isLoaded();
         }
 
         public load(): void {
-            
+            this._sprite = new PIXI.Sprite( this._textureAsset.internalData as PIXI.Texture );
+        }
+
+        public unload(): void {
+            this._textureAsset.destroy();
+            this._sprite.destroy();
         }
 
         public update( dt: number ): void {

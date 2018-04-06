@@ -1,4 +1,6 @@
-﻿module BullShift {
+﻿/// <reference path="gameobject.ts" />
+
+module BullShift {
 
     export class Scene {
 
@@ -15,6 +17,10 @@
             this.name = name;
 
             this._container = new PIXI.Container();
+        }
+
+        public get isActive(): boolean {
+            return this._isActive;
         }
 
         public addObject( obj: GameObject ): void {
@@ -37,9 +43,30 @@
             this._application.stage.removeChild( this._container );
         }
 
+        public preloading(): boolean {
+            for ( let o in this._gameObjects ) {
+                if ( this._gameObjects[o].preloading() ) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public initialize( components: ComponentDictionary ): void {
+            for ( let o in this._gameObjects ) {
+                this._gameObjects[o].initialize( components );
+            }
+        }
+
         public load(): void {
             for ( let o in this._gameObjects ) {
                 this._gameObjects[o].load();
+            }
+        }
+
+        public unload(): void {
+            for ( let o in this._gameObjects ) {
+                this._gameObjects[o].unload();
             }
         }
     }

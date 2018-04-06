@@ -26,54 +26,41 @@ module BullShift {
             loader.load( this.onConfigLoaded.bind( this ) );
         }
 
-        public get preloading(): boolean {
+        public get configPreloading(): boolean {
             return !this._preloadingDone;
+        }
+
+        public get preloading(): boolean {
+            return this._scene.preloading();
         }
 
         public get scene(): Scene {
             return this._scene;
         }
 
-        public load(): void {
-            if ( !this._preloadingDone ) {
-                throw new Error( "Level load called before preload finished!" );
-            }
-
+        public initialize(): void {
             this._components = ComponentManager.getComponentsFromConfiguration( this._configuration );
 
             if ( this._configuration.scene && this._configuration.scene.objects ) {
                 let configSection = this._configuration.scene.objects;
-                this.loadObjects( configSection, undefined );
+                this.createObjects( configSection, undefined );
             }
 
-            // For now, loading the player separately and manually since it is a special case.
-            // TODO: this is rubbish, should probably have a custom GO class or something.
-            /*if ( this._configuration.scene.player ) {
-                let playerConfig = this._configuration.scene.player;
+            this._scene.initialize( this._components );
+        }
 
-                if ( playerConfig.x === undefined || playerConfig.y === undefined || playerConfig.asset === undefined ) {
-                    throw new Error( "Player configuration must have x, y, and asset." );
-                }
-                let obj = new GameObject( "player" );
-                obj.x = playerConfig.x;
-                obj.y = playerConfig.y;
-
-                let spriteConfig = new SpriteComponentConfig();
-                spriteConfig.assetPath = playerConfig.asset;
-                spriteConfig.name = "playerSpriteComponent";
-                obj.addComponent( new SpriteComponent( spriteConfig ) );
-
-                this._scene.addObject( obj );
-            }*/
-
-            this.scene.load();
+        public load(): void {
+            if ( !this._preloadingDone ) {
+                throw new Error( "Level load called before preload finished!" );
+            }
+            this._scene.load();
         }
 
         public unload(): void {
-
+            this._scene.unload();
         }
 
-        private loadObjects( configSection: any, parentObject: GameObject ): void {
+        private createObjects( configSection: any, parentObject: GameObject ): void {
             for ( let o in configSection ) {
                 let objConfig = configSection[o];
 
@@ -105,7 +92,7 @@ module BullShift {
 
                 // Child game objects if there are any.
                 if ( objConfig.children ) {
-                    this.loadObjects( objConfig.children, obj );
+                    this.createObjects( objConfig.children, obj );
                 }
 
                 // If in a child, make sure to parent it. Otherwise, add it directly to the scene.
@@ -118,6 +105,9 @@ module BullShift {
         }
 
         private onConfigLoaded( loader: PIXI.loaders.Loader, resources: any ): void {
+            if ( resources[this._lookup].error ) {
+                console.error( "Error loading level config:", resources[this._lookup].error );
+            }
             console.info( "data:", resources[this._lookup].data );
             this._preloadingDone = true;
             this._configuration = resources[this._lookup].data;

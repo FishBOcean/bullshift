@@ -12,6 +12,7 @@ module BullShift {
             // Add new factories here.
             this._factories.push( new SpriteComponentFactory() );
             this._factories.push( new MoveComponentFactory() );
+            this._factories.push( new AnimatedSpriteComponentFactory() );
         }
 
         public static initialize(): void {

@@ -1,14 +1,18 @@
-﻿module BullShift {
+﻿/// <reference path="../gameobject.ts" />
+
+module BullShift {
 
     export interface IGameObjectComponent {
         name: string;
         gameObject: GameObject;
 
-        initialize( components: IGameObjectComponent ): void;
+        initialize( components: ComponentDictionary ): void;
 
         preloading(): boolean;
 
         load(): void;
+
+        unload(): void;
 
         update( dt: number ): void;
 

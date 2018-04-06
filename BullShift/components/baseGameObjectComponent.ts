@@ -11,11 +11,13 @@ module BullShift {
             this._config = config;
         }
 
-        public abstract initialize( components: IGameObjectComponent ): void;
+        public abstract initialize( components: ComponentDictionary ): void;
 
         public abstract preloading(): boolean;
 
         public abstract load(): void;
+
+        public abstract unload(): void;
 
         public abstract update( dt: number ): void;
 

@@ -38,8 +38,8 @@
       },
       {
         "name": "animatedTestObj",
-        "x:" 128,
-        "y:" 128,
+        "x": 128,
+        "y": 128,
         "components": [
           "animatedTestComponent"
         ]
@@ -72,7 +72,8 @@
         "asset": "assets/animation_test.png",
         "frameSizeX": 32,
         "frameSizeY": 32,
-        "totalFrames": 4
+        "totalFrames": 4,
+        "frameRate": 4
       }
     ],
     "move": [

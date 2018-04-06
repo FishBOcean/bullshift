@@ -60,13 +60,52 @@
             this._components.push( component );
         }
 
+        public initialize( components: ComponentDictionary ): void {
+            for ( let c in this._components ) {
+                this._components[c].initialize( components );
+            }
+            for ( let o in this._children ) {
+                this._children[o].initialize( components );
+            }
+        }
+
+        public preloading(): boolean {
+            for ( let c in this._components ) {
+                if ( this._components[c].preloading() ) {
+                    return true;
+                }
+            }
+            for ( let o in this._children ) {
+                if ( this._children[o].preloading() ) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public load(): void {
             for ( let c in this._components ) {
                 this._components[c].load();
                 let comp = this._components[c];
-                if ( isRenderable(comp) ) {
+                if ( isRenderable( comp ) ) {
                     this._container.addChild( comp.internalData );
                 }
+            }
+            for ( let o in this._children ) {
+                this._children[o].load();
+            }
+        }
+
+        public unload(): void {
+            for ( let c in this._components ) {
+                let comp = this._components[c];
+                if ( isRenderable( comp ) ) {
+                    this._container.removeChild( comp.internalData );
+                }
+                comp.unload();
+            }
+            for ( let o in this._children ) {
+                this._children[o].unload();
             }
         }
     }

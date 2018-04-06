@@ -37,7 +37,7 @@
     <WarningLevel>4</WarningLevel>
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
-    <TypeScriptModuleKind />
+    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
     <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
     <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
@@ -113,6 +113,7 @@
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="assetManager.ts" />
     <TypeScriptCompile Include="components\animatedSprite\animatedSpriteComponent.ts" />
+    <TypeScriptCompile Include="components\animatedSprite\animatedSpriteComponentFactory.ts" />
     <TypeScriptCompile Include="components\baseGameObjectComponent.ts" />
     <TypeScriptCompile Include="components\ComponentManager.ts" />
     <TypeScriptCompile Include="components\IComponentConfig.ts" />
@@ -132,6 +133,7 @@
     <TypeScriptCompile Include="MessageBus.ts" />
     <TypeScriptCompile Include="playScreen.ts" />
     <TypeScriptCompile Include="scene.ts" />
+    <TypeScriptCompile Include="utils\stringUtils.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

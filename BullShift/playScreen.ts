@@ -12,7 +12,9 @@ module BullShift {
 
         public constructor( application: PIXI.Application ) {
             super( application, "PlayScreen" );
+        }
 
+        public initialize(): void {
             this._upCtrl = this.addButton( "upCtrl", 'assets/ctrl_up.png',
                 this.upPressed.bind( this ),
                 Game.TILE_SIZE * 2,
@@ -32,8 +34,9 @@ module BullShift {
                 this.rightPressed.bind( this ),
                 Game.TILE_SIZE * 3,
                 this._application.screen.height - ( Game.TILE_SIZE * 3 ) );
+
+            super.initialize();
         }
-        
 
         private leftPressed(): void {
             Message.createAndSend( "Player:moveLeft", this );

@@ -54,11 +54,7 @@ module BullShift {
             super( config );
         }
 
-        public preloading(): boolean {
-            return false;
-        }
-
-        public load(): void {
+        public initialize( components: ComponentDictionary ): void {
 
             // Subscribe to messages here instead of the constructor because only components which are
             // actually loaded should be subscribed. Otherwise, template instances of components will
@@ -69,6 +65,16 @@ module BullShift {
                 this._subscribedMessages.push( mcfg );
                 Message.subscribe( mcfg.name, this );
             }
+        }
+
+        public preloading(): boolean {
+            return false;
+        }
+
+        public load(): void {
+        }
+
+        public unload(): void {
         }
 
         public update( dt: number ): void {

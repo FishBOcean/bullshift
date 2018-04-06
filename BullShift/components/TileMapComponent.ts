@@ -47,8 +47,20 @@ module BullShift {
             return this._tileSize * this._tilesHigh;
         }
 
+        public preloading(): boolean {
+            return false;
+        }
+
+        public initialize( components: ComponentDictionary ): void {
+
+        }
+
         public load(): void {
             //this._sprite = PIXI.Sprite.fromImage( this._assetPath );
+        }
+
+        public unload(): void {
+
         }
 
         public update( dt: number ): void {
