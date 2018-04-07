@@ -3,69 +3,21 @@
 module BullShift {
 
     /**
-     * The configuration class used for animated sprites.
+     * Represents a collection of commands used for sprite animations which are used for messages.
+     * These are combined with the name of the animated sprite component to form the message name.
      */
-    export class AnimatedSpriteComponentConfig extends SpriteComponentConfig {
-
-        /**
-         * Indicates if the animation should start automatically. Default: true
-         */
-        public autoStartAnimation: boolean = true;
-
-        /**
-         * The size of each frame on the x-dimension in pixels.
-         */
-        public frameSizeX: number;
-
-        /**
-         * The size of each frame on the y-dimension in pixels.
-         */
-        public frameSizeY: number;
-
-        /**
-         * The total number of frames in the animation.
-         */
-        public totalFrames: number;
-
-        /**
-         * The frames to display per second. 
-         */
-        public frameRate: number = 3;
-
-        /**
-         * Populates this configuration object from the provided JSON object.
-         * @param jsonConfiguration The JSON configuration object.
-         */
-        public populateFromJson( jsonConfiguration: any ): void {
-            super.populateFromJson( jsonConfiguration );
-
-            if ( !jsonConfiguration.frameSizeX ) {
-                throw new Error( "SpriteComponentConfig json must contain a frame size for the x dimension (frameSizeX)!" );
-            }
-            this.frameSizeX = jsonConfiguration.frameSizeX;
-
-            if ( !jsonConfiguration.frameSizeY ) {
-                throw new Error( "SpriteComponentConfig json must contain a frame size for the y dimension (frameSizeY)!" );
-            }
-            this.frameSizeY = jsonConfiguration.frameSizeY;
-
-            if ( !jsonConfiguration.totalFrames ) {
-                throw new Error( "SpriteComponentConfig json must contain the total number of frames (totalFrames)!" );
-            }
-            this.totalFrames = jsonConfiguration.totalFrames;
-
-            if ( jsonConfiguration.autoStartAnimation !== undefined ) {
-                this.autoStartAnimation = jsonConfiguration.autoStartAnimation;
-            }
-
-            if ( jsonConfiguration.frameRate !== undefined ) {
-                this.frameRate = jsonConfiguration.frameRate;
-            }
-        }
-    }
-
+    enum AnimatedSpriteCommands {
+        SET_ANIMATION = ":SetAnimation",
+        PLAY_ANIMATION = ":PlayAnimation",
+        PAUSE_ANIMATION = ":PauseAnimation",
+        STOP_ANIMATION = ":StopAnimation"
+    };
+    
+    /**
+     * An animated sprite which can contain a number of animations.
+     */
     export class AnimatedSpriteComponent extends SpriteComponent {
-        
+
         protected _frames: PIXI.Texture[] = [];
         protected _accumulatedFrameTime: number = 0;
         protected _isAnimating: boolean = false;
@@ -77,6 +29,13 @@ module BullShift {
         protected _frameRate: number = 3;
         protected _frameTimeMS: number;
 
+        protected _currentAnimation: AnimatedSpriteAnimationConfig;
+        protected _currentAnimationFrame: number = 0;
+
+        /**
+         * Creates a new animated sprite from the provided configuration object.
+         * @param config THe configuration to be used when creating this animated sprite.
+         */
         public constructor( config: AnimatedSpriteComponentConfig ) {
             super( config );
 
@@ -85,20 +44,31 @@ module BullShift {
             this._frameSizeX = config.frameSizeX;
             this._frameSizeY = config.frameSizeY;
             this._frameRate = config.frameRate;
-            this._frameTimeMS = this._frameRate * 1000;
+
+            this.calculateFrameTimeMS();
+
             if ( this._autoStartAnimation === true ) {
                 this._isAnimating = true;
             }
         }
 
+        /**
+         * Initializes this component and links any component instances needed by it.
+         * @param components
+         */
         public initialize( components: ComponentDictionary ): void {
             super.initialize( components );
         }
 
+        /**
+         * Loads this component.
+         */
         public load(): void {
             super.load();
 
-            let totalFrames = ( this._config as AnimatedSpriteComponentConfig ).totalFrames;
+            let config = ( this._config as AnimatedSpriteComponentConfig );
+
+            let totalFrames = config.totalFrames;
             for ( let i = 0; i < totalFrames; ++i ) {
 
                 let w = this._sprite.texture.baseTexture.realWidth;
@@ -132,10 +102,21 @@ module BullShift {
                 }
             }
 
+            // Default to the first frame of the default animation.
+            this.setAnimation( config.defaultAnimation );
+
             // Default to the first frame.
-            this._sprite.texture = this._frames[0];
+            this._sprite.texture = this._frames[this._currentFrame];
+
+            Message.subscribe( this.name + AnimatedSpriteCommands.SET_ANIMATION, this );
+            Message.subscribe( this.name + AnimatedSpriteCommands.PLAY_ANIMATION, this );
+            Message.subscribe( this.name + AnimatedSpriteCommands.PAUSE_ANIMATION, this );
+            Message.subscribe( this.name + AnimatedSpriteCommands.STOP_ANIMATION, this );
         }
 
+        /**
+         * Unloads this component.
+         */
         public unload(): void {
             for ( let i = 0; i < this._frames.length; ++i ) {
                 this._frames[i].destroy();
@@ -143,46 +124,84 @@ module BullShift {
             super.unload();
         }
 
+        /**
+         * Performs update logic on this component.
+         * @param dt The delta time in milliseconds since the last frame.
+         */
         public update( dt: number ): void {
             if ( this._isAnimating ) {
 
                 // Accumulate time, then flip to next frame when framerate expires.
                 this._accumulatedFrameTime += dt;
                 if ( this._accumulatedFrameTime > this._frameTimeMS ) {
-                    this._currentFrame++;
-                    if ( this._currentFrame >= this._totalFrames ) {
-                        this._currentFrame = 0;
+                    this._currentAnimationFrame++;
+                    if ( this._currentAnimationFrame >= this._currentAnimation.frameIndices.length ) {
+                        this._currentAnimationFrame = 0;
                     }
-
-                    this._sprite.texture = this._frames[this._currentFrame];
+                    this.updateFrame();
 
                     this._accumulatedFrameTime -= this._frameTimeMS;
                 }
             }
         }
 
+        /**
+         * Clones this component.
+         */
         public clone(): AnimatedSpriteComponent {
             return new AnimatedSpriteComponent( this._config as AnimatedSpriteComponentConfig );
         }
 
+        /**
+         * Processes messages for this component.
+         * @param message The message to be processed.
+         */
         public onMessage( message: Message ): void {
             if ( !this.gameObject ) {
                 console.warn( "Trying to process a message on a MoveComponent which has no attached game object." );
                 return;
             }
 
-            //let matches = this._subscribedMessages.filter( x => x.name == message.name );
-            //if ( matches.length > 0 ) {
-            //    let msgCfg = matches[0];
-            //    switch ( msgCfg.axis ) {
-            //        case "x":
-            //            this.gameObject.x += msgCfg.amount;
-            //            break;
-            //        case "y":
-            //            this.gameObject.y += msgCfg.amount;
-            //            break;
-            //    }
-            //}
+            // TODO: Might want to have a context object which contains specific data about the action.
+            // BullShift.Message.createAndSend("animatedTestComponent:SetAnimation", null, "animB");
+            switch ( message.name ) {
+                case this.name + AnimatedSpriteCommands.SET_ANIMATION:
+                    this.setAnimation( message.context as string );
+                    break;
+                case this.name + AnimatedSpriteCommands.PLAY_ANIMATION:
+                    if ( message.context !== undefined ) {
+                        this.setAnimation( message.context as string );
+                    }
+                    this._isAnimating = true;
+                case this.name + AnimatedSpriteCommands.PAUSE_ANIMATION:
+                    this._isAnimating = false;
+                    break;
+                case this.name + AnimatedSpriteCommands.STOP_ANIMATION:
+                    this._isAnimating = false;
+                    this._currentAnimationFrame = 0;
+                    this._accumulatedFrameTime = 0;
+                    break;
+            }
+        }
+
+        private setAnimation( animationName: string ): void {
+            this._currentAnimation = ( this._config as AnimatedSpriteComponentConfig ).animations[animationName];
+            this._frameRate = this._currentAnimation.frameRate;
+            this._currentAnimationFrame = 0;
+            this._accumulatedFrameTime = 0;
+            this.calculateFrameTimeMS();
+            this.updateFrame();
+        }
+
+        private updateFrame(): void {
+            this._currentFrame = this._currentAnimation.frameIndices[this._currentAnimationFrame];
+            this._sprite.texture = this._frames[this._currentFrame];
+        }
+
+        private calculateFrameTimeMS(): void {
+            let msPerFrame = 1000 / 60;
+            let ratio = 60 / this._frameRate;
+            this._frameTimeMS = msPerFrame * ratio;
         }
     }
 }

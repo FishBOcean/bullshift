@@ -73,7 +73,20 @@
         "frameSizeX": 32,
         "frameSizeY": 32,
         "totalFrames": 4,
-        "frameRate": 1
+        "frameRate": 4,
+        "defaultAnimation": "animA",
+        "animations": [
+          {
+            "name": "animA",
+            "frameIndices": [ 0, 3, 1, 2 ],
+            "frameRate": 1
+          },
+          {
+            "name": "animB",
+            "frameIndices": [ 0, 1, 2, 3 ],
+            "frameRate": 4
+          }
+        ]
       }
     ],
     "move": [
