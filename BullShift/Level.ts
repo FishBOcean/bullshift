@@ -34,9 +34,14 @@ module BullShift {
             return this._scene.preloading();
         }
 
-        public get scene(): Scene {
-            return this._scene;
+        public get isActive(): boolean {
+            return this._scene.isActive;
         }
+
+
+        //public get scene(): Scene {
+        //    return this._scene;
+        //}
 
         public initialize(): void {
             this._components = ComponentManager.getComponentsFromConfiguration( this._configuration );
@@ -58,6 +63,18 @@ module BullShift {
 
         public unload(): void {
             this._scene.unload();
+        }
+        
+        public activate(): void {
+            this._scene.activate();
+        }
+
+        public deactivate(): void {
+            this._scene.deactivate();
+        }
+
+        public update( dt: number ): void {
+            this._scene.update( dt );
         }
 
         private createObjects( configSection: any, parentObject: GameObject ): void {

@@ -73,7 +73,7 @@
         "frameSizeX": 32,
         "frameSizeY": 32,
         "totalFrames": 4,
-        "frameRate": 4
+        "frameRate": 1
       }
     ],
     "move": [

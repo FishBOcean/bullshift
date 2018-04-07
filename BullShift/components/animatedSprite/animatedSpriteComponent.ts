@@ -65,19 +65,17 @@ module BullShift {
     }
 
     export class AnimatedSpriteComponent extends SpriteComponent {
-
-        //private _baseTexture: PIXI.BaseTexture;
-        private _frames: PIXI.Texture[] = [];
-        private _accumulatedFrameTime: number = 0;
-
-        private _isAnimating: boolean = false;
-        private _autoStartAnimation: boolean = true;
-        private _totalFrames: number;
-        private _currentFrame: number = 0;
-        private _frameSizeX: number = 0;
-        private _frameSizeY: number = 0;
-        private _frameRate: number = 3;
-        private _frameTimeMS: number;
+        
+        protected _frames: PIXI.Texture[] = [];
+        protected _accumulatedFrameTime: number = 0;
+        protected _isAnimating: boolean = false;
+        protected _autoStartAnimation: boolean = true;
+        protected _totalFrames: number;
+        protected _currentFrame: number = 0;
+        protected _frameSizeX: number = 0;
+        protected _frameSizeY: number = 0;
+        protected _frameRate: number = 3;
+        protected _frameTimeMS: number;
 
         public constructor( config: AnimatedSpriteComponentConfig ) {
             super( config );
@@ -87,7 +85,7 @@ module BullShift {
             this._frameSizeX = config.frameSizeX;
             this._frameSizeY = config.frameSizeY;
             this._frameRate = config.frameRate;
-            this._frameTimeMS = 1000 / this._frameRate;
+            this._frameTimeMS = this._frameRate * 1000;
             if ( this._autoStartAnimation === true ) {
                 this._isAnimating = true;
             }
@@ -98,34 +96,38 @@ module BullShift {
         }
 
         public load(): void {
-            this._sprite = new PIXI.Sprite();
+            super.load();
 
             let totalFrames = ( this._config as AnimatedSpriteComponentConfig ).totalFrames;
             for ( let i = 0; i < totalFrames; ++i ) {
 
-                if ( this._sprite.width % this._frameSizeX !== 0 ) {
+                let w = this._sprite.texture.baseTexture.realWidth;
+                let h = this._sprite.texture.baseTexture.realHeight;
+
+                if ( w === 0 || w % this._frameSizeX !== 0 ) {
                     throw new Error( "Sprite width is not a multiple of frame size. FrameSizeX=" + this._frameSizeX + ", width=" + this._sprite.width );
                 }
-                if ( this._sprite.height < this._frameSizeY ) {
+                if ( h === 0 || h < this._frameSizeY ) {
                     throw new Error( "Sprite height is smaller than frame size. FrameSizeY=" + this._frameSizeY + ", height=" + this._sprite.height );
                 }
 
                 let baseTexture = ( this._textureAsset.internalData as PIXI.Texture ).baseTexture;
+                console.info( this._sprite );
 
-                let framesWide = this._sprite.width / this._frameSizeX;
-                let framesHigh = this._sprite.height / ( this._totalFrames / framesWide );
+                let framesWide = w / this._frameSizeX;
+                let framesHigh = ( ( h / ( this._totalFrames / framesWide ) ) / this._frameSizeY );
 
                 // Calculate out the frames.
-                for ( let j = 0; j < framesHigh; ++j ) {
-                    for ( let i = 0; i < framesWide; ++i ) {
-                        this._frames.push(
-                            new PIXI.Texture( baseTexture,
-                                new PIXI.Rectangle(
-                                    this._frameSizeX * i,
-                                    this._frameSizeY * j,
-                                    this._frameSizeX,
-                                    this._frameSizeY ) )
-                        );
+                for ( let y = 0; y < framesHigh; ++y ) {
+                    for ( let x = 0; x < framesWide; ++x ) {
+
+                        let tex = new PIXI.Texture( baseTexture,
+                            new PIXI.Rectangle(
+                                this._frameSizeX * x,
+                                this._frameSizeY * y,
+                                this._frameSizeX,
+                                this._frameSizeY ) );
+                        this._frames.push( tex );
                     }
                 }
             }
@@ -142,7 +144,6 @@ module BullShift {
         }
 
         public update( dt: number ): void {
-
             if ( this._isAnimating ) {
 
                 // Accumulate time, then flip to next frame when framerate expires.

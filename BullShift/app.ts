@@ -4,7 +4,6 @@ var g_game: BullShift.Game;
 window.onload = function () {
     BullShift.MessageBus.initialize();
     BullShift.ComponentManager.initialize();
-    BullShift.AssetManager.initialize();
 
     let game = new BullShift.Game();
 

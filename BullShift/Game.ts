@@ -30,24 +30,29 @@ module BullShift {
         public update( dt: number ): void {
             if ( this._state == GameState.LEVEL_PRELOADING ) {
                 if ( !this._activeLevel.configPreloading ) {
-                    console.log( "preloading done, loading..." );
+                    console.log( "Configuration loaded. Beginning load process..." );
                     this._activeLevel.initialize();
                     this._state = GameState.LEVEL_LOADING;
                 } else {
-                    console.log( "Still preloading. Waiting..." );
+                    console.log( "Waiting on configuration..." );
                 }
             } else if ( this._state === GameState.LEVEL_LOADING ) {
-                console.log( "loading..." );
                 if ( !this._activeLevel.preloading ) {
-                    this._activeLevel.scene.load();
+                    console.log( "Level pre-loading complete. Loading..." );
+                    this._activeLevel.load();
+
+                    console.log( "Load complete. Starting gameplay..." );
                     this._state = GameState.PLAYING;
+                } else {
+                    console.log( "Level loading..." );
                 }
             } else if ( this._state === GameState.PLAYING ) {
-                console.log( "playing..." );
-                if ( !this._activeLevel.scene.isActive ) {
+                //console.log( "playing..." );
+                if ( !this._activeLevel.isActive ) {
                     console.log( "Level not active - activating..." );
-                    this._activeLevel.scene.activate();
+                    this._activeLevel.activate();
                 }
+                this._activeLevel.update( dt );
             }
 
             // UI
@@ -64,10 +69,11 @@ module BullShift {
                         this._gameScreens[s].load();
                     }
                     this._uiLoaded = true;
+                    console.log( "All gameScreens are loaded." );
                 }
             }
 
-            console.log( "All gameScreens are loaded." );
+            
 
             // TODO: check for signals of a level change.
         }
@@ -80,16 +86,19 @@ module BullShift {
             this._application = new PIXI.Application( 800, 600, { backgroundColor: 0x1099bb } );
             document.getElementById( 'content' ).appendChild( this._application.view );
 
+            BullShift.AssetManager.initialize( this._application );
+
             this.setActiveLevel( new Level( this._application, "testLevel", "assets/levels/testLevel.json" ) );
 
             this.initializeUI();
-            
+
 
             // delta is 1 if running at 100% performance
             // creates frame-independent transformation
             this._application.ticker.add( function ( dt ) {
-                this.update( dt );
+                this.update( dt / 60 * 1000 ); // scale back by FPS
             }.bind( this ) );
+            this._application.ticker.elapsedMS
         }
 
         public onMessage( message: Message ): void {
@@ -101,7 +110,7 @@ module BullShift {
 
         private setActiveLevel( level: Level ): void {
             if ( this._activeLevel ) {
-                this._activeLevel.scene.deactivate();
+                this._activeLevel.deactivate();
                 this._activeLevel.unload();
             }
 

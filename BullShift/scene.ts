@@ -69,5 +69,11 @@ module BullShift {
                 this._gameObjects[o].unload();
             }
         }
+
+        public update( dt: number ): void {
+            for ( let o in this._gameObjects ) {
+                this._gameObjects[o].update( dt );
+            }
+        }
     }
 }
