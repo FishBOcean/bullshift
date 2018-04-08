@@ -113,6 +113,7 @@
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="assetManager.ts" />
     <TypeScriptCompile Include="components\animatedSprite\animatedSpriteComponent.ts" />
+    <TypeScriptCompile Include="components\animatedSprite\animatedSpriteComponentConfig.ts" />
     <TypeScriptCompile Include="components\animatedSprite\animatedSpriteComponentFactory.ts" />
     <TypeScriptCompile Include="components\baseGameObjectComponent.ts" />
     <TypeScriptCompile Include="components\ComponentManager.ts" />
@@ -122,7 +123,10 @@
     <TypeScriptCompile Include="components\move\MoveComponentFactory.ts" />
     <TypeScriptCompile Include="components\sprite\SpriteComponent.ts" />
     <TypeScriptCompile Include="components\sprite\SpriteComponentFactory.ts" />
-    <TypeScriptCompile Include="components\TileMapComponent.ts" />
+    <TypeScriptCompile Include="components\tileMap\tileComponent.ts" />
+    <TypeScriptCompile Include="components\tileMap\tileMapComponent.ts" />
+    <TypeScriptCompile Include="components\tileMap\tileMapFactory.ts" />
+    <TypeScriptCompile Include="components\tileMap\tileSetComponent.ts" />
     <TypeScriptCompile Include="components\UIButtonComponent.ts" />
     <TypeScriptCompile Include="game.ts" />
     <TypeScriptCompile Include="GameObject.ts" />

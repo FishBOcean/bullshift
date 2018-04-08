@@ -34,7 +34,7 @@ module BullShift {
 
         /**
          * Creates a new animated sprite from the provided configuration object.
-         * @param config THe configuration to be used when creating this animated sprite.
+         * @param config The configuration to be used when creating this animated sprite.
          */
         public constructor( config: AnimatedSpriteComponentConfig ) {
             super( config );

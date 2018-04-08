@@ -30,7 +30,7 @@ module BullShift {
         }
     }
 
-    export class SpriteComponent extends BaseGameObjectComponent {
+    export class SpriteComponent extends BaseGameObjectComponent implements IRenderableComponent {
 
         protected _sprite: PIXI.Sprite;
         protected _textureAsset: TextureAsset;
