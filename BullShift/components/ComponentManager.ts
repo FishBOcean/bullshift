@@ -1,12 +1,19 @@
 ﻿
 module BullShift {
 
+    /**
+     * Manages component factories and initial load.
+     */
     export class ComponentManager {
 
         private static _inst: ComponentManager;
 
         private _factories: IComponentFactory[] = [];
 
+        /**
+         * Creates a new component manager. This is private so that it adheres to the 
+         * singleton pattern.
+         */
         private constructor() {
 
             // Add new factories here.
@@ -16,6 +23,9 @@ module BullShift {
             this._factories.push( new TileMapComponentFactory() );
         }
 
+        /**
+         * Initializes the component manager.
+         */
         public static initialize(): void {
             if ( !ComponentManager._inst ) {
                 ComponentManager._inst = new ComponentManager();

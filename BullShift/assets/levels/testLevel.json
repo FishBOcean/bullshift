@@ -45,6 +45,14 @@
         ]
       },
       {
+        "name": "tileMap",
+        "x": 256,
+        "y": 256,
+        "components": [
+          "mainTileMap"
+        ]
+      },
+      {
         "name": "player",
         "x": 64,
         "y": 0,
@@ -63,7 +71,15 @@
       },
       {
         "name": "playerSpriteComponent",
-        "asset": "assets/player.png"
+        "asset": "assets/jethro.png"
+      },
+      {
+        "name": "grassSpriteComponent",
+        "asset": "assets/grass.png"
+      },
+      {
+        "name": "crateSpriteComponent",
+        "asset": "assets/crate.png"
       }
     ],
     "animatedSprite": [
@@ -114,6 +130,53 @@
             "amount": 32
           }
         ]
+      }
+    ],
+    "tileMap": [
+      {
+        "name": "mainTileMap",
+        "tileSet": "mainTileSet",
+        "tilesWide": 10,
+        "tilesHigh": 10,
+        "layers": [
+          {
+            "tilesWide": 10,
+            "tilesHigh": 10,
+            "tileIDs": [
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+              1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+              1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+              1, 0, 0, 0, 1, 1, 0, 0, 0, 1,
+              1, 0, 0, 0, 1, 0, 0, 0, 0, 1,
+              1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+              1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+              1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+            ]
+          }
+        ]
+      }
+    ],
+    "tileSet": [
+      {
+        "name": "mainTileSet",
+        "tiles": [
+          "grassTile",
+          "crateTile"
+        ]
+      }
+    ],
+    "tile": [
+      {
+        "name": "grassTile",
+        "type": "background",
+        "spriteComponent": "grassSpriteComponent"
+      },
+      {
+        "name": "crateTile",
+        "type": "background",
+        "spriteComponent": "crateSpriteComponent"
       }
     ]
   }

@@ -1,7 +1,14 @@
 ﻿module BullShift {
 
+    /**
+     * A factory which creates move components from JSON configuration.
+     */
     export class MoveComponentFactory implements IComponentFactory {
 
+        /**
+         * Returns a collection of components created from configuration in this factory.
+         * @param configuration
+         */
         public getComponents( configuration: any ): ComponentDictionary {
             let components: ComponentDictionary = {};
 

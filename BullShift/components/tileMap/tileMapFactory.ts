@@ -1,7 +1,14 @@
 ﻿module BullShift {
 
+    /**
+     * A factory for creating tile maps and their associated components from configuration.
+     */
     export class TileMapComponentFactory implements IComponentFactory {
 
+        /**
+         * Returns a collection of components created by this factory.
+         * @param configuration The JSON configuration to create from.
+         */
         public getComponents( configuration: any ): ComponentDictionary {
             let components: ComponentDictionary = {};
 

@@ -2,11 +2,32 @@
 
 module BullShift {
 
+    /**
+     * Configures what to do when a message is recieved relative to a move component.
+     */
     export class MoveComponentMessageConfig {
+
+        /**
+         * The name of this configuration.
+         */
         public name: string;
+
+        /**
+         * The axis to move along (should be either "x" or "y").
+         */
         public axis: string;
+
+        /**
+         * The amount to move by.
+         */
         public amount: number;
 
+        /**
+         * Creates a new move component message configuration.
+         * @param name The name of this configuration.
+         * @param axis The axis to move along.
+         * @param amount The amount to move by.
+         */
         public constructor( name: string, axis: string, amount: number ) {
             this.name = name;
             this.axis = axis;
@@ -23,11 +44,25 @@ module BullShift {
         }
     }
 
+    /**
+     * Represents configuration for a move component.
+     */
     export class MoveComponentConfig implements IComponentConfig {
+
+        /**
+         * The name of this component.
+         */
         public name;
 
+        /**
+         * The messages this component should subscribe to and what to do when one of them is sent.
+         */
         public messages: MoveComponentMessageConfig[] = [];
 
+        /**
+         * Populates the values in this configuration with those from the provided JSON.
+         * @param jsonConfiguration The JSON configuration object.
+         */
         public populateFromJson( jsonConfiguration: any ): void {
             if ( !jsonConfiguration.name ) {
                 throw new Error( "SpriteComponentConfig json must contain a name!" );
@@ -46,14 +81,25 @@ module BullShift {
         }
     }
 
+    /**
+     * A component which handles movement along a provided axis when a message is recieved.
+     */
     export class MoveComponent extends BaseGameObjectComponent {
 
         private _subscribedMessages: MoveComponentMessageConfig[] = [];
 
+        /**
+         * Creates a new move component.
+         * @param config The component configuration.
+         */
         public constructor( config: MoveComponentConfig ) {
             super( config );
         }
 
+        /**
+         * Initializes and links this components to other components it needs.
+         * @param components The listing of all components created from configuration.
+         */
         public initialize( components: ComponentDictionary ): void {
 
             // Subscribe to messages here instead of the constructor because only components which are
@@ -67,23 +113,45 @@ module BullShift {
             }
         }
 
+        /**
+         * Indicates whether this component is preloading.
+         */
         public preloading(): boolean {
+
+            // This component doesn't load any assets, so immediately return false here.
             return false;
         }
 
+        /**
+         * Loads this component.
+         */
         public load(): void {
         }
 
+        /**
+         * Unloads this component.
+         */
         public unload(): void {
         }
 
+        /**
+         * Updates this component.
+         * @param dt The delta time in milliseconds since the last frame.
+         */
         public update( dt: number ): void {
         }
 
+        /**
+         * Clones this component.
+         */
         public clone(): MoveComponent {
             return new MoveComponent( this._config as MoveComponentConfig );
         }
 
+        /**
+         * The message handler for this component, called when a subscribed message is sent.
+         * @param message The message being handled.
+         */
         public onMessage( message: Message ): void {
             if ( !this.gameObject ) {
                 console.warn( "Trying to process a message on a MoveComponent which has no attached game object." );

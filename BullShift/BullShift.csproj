@@ -126,6 +126,7 @@
     <TypeScriptCompile Include="components\tileMap\tileComponent.ts" />
     <TypeScriptCompile Include="components\tileMap\tileMapComponent.ts" />
     <TypeScriptCompile Include="components\tileMap\tileMapFactory.ts" />
+    <TypeScriptCompile Include="components\tileMap\tileMapLayer.ts" />
     <TypeScriptCompile Include="components\tileMap\tileSetComponent.ts" />
     <TypeScriptCompile Include="components\UIButtonComponent.ts" />
     <TypeScriptCompile Include="game.ts" />
@@ -134,6 +135,7 @@
     <TypeScriptCompile Include="components\IGameObjectComponent.ts" />
     <TypeScriptCompile Include="Level.ts" />
     <TypeScriptCompile Include="lib\pixi.d.ts" />
+    <TypeScriptCompile Include="math.ts" />
     <TypeScriptCompile Include="MessageBus.ts" />
     <TypeScriptCompile Include="playScreen.ts" />
     <TypeScriptCompile Include="scene.ts" />
