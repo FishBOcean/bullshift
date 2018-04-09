@@ -1,6 +1,9 @@
 ﻿
 module BullShift {
 
+    /**
+     * Represents a level in a game. Only one of these may be loaded at a time.
+     */
     export class Level {
 
         private _jsonAsset: string;
@@ -11,8 +14,17 @@ module BullShift {
         private _application: PIXI.Application;
         private _components: ComponentDictionary = {};
 
+        /**
+         * The name of this level.
+         */
         public name: string;
 
+        /**
+         * Creates a new level.
+         * @param application The application handle.
+         * @param name The name of this level.
+         * @param jsonAssetPath The JSON configuration path for this level.
+         */
         public constructor( application: PIXI.Application, name: string, jsonAssetPath: string ) {
             this.name = name;
             this._application = application;
@@ -26,23 +38,32 @@ module BullShift {
             loader.load( this.onConfigLoaded.bind( this ) );
         }
 
+        /**
+         * Indicates if the configuration file is still being loaded.
+         */
         public get configPreloading(): boolean {
             return !this._preloadingDone;
         }
 
+        /**
+         * Indicates if this level is preloading. Returns true if any object or component contained is still preloading.
+         * @returns True if any game object or component is loading; otherwise, false.
+         */
         public get preloading(): boolean {
             return this._scene.preloading();
         }
 
+        /**
+         * Indicates whether this level is active.
+         */
         public get isActive(): boolean {
             return this._scene.isActive;
         }
-
-
-        //public get scene(): Scene {
-        //    return this._scene;
-        //}
-
+        
+        /**
+         * Initializes this level. This in turn loads up components from configuration and calls
+         * initialization routines all the way down the line.
+         */
         public initialize(): void {
             this._components = ComponentManager.getComponentsFromConfiguration( this._configuration );
 
@@ -54,6 +75,9 @@ module BullShift {
             this._scene.initialize( this._components );
         }
 
+        /**
+         * Loads this level.
+         */
         public load(): void {
             if ( !this._preloadingDone ) {
                 throw new Error( "Level load called before preload finished!" );
@@ -61,18 +85,31 @@ module BullShift {
             this._scene.load();
         }
 
+        /**
+         * Unloads this level.
+         */
         public unload(): void {
             this._scene.unload();
         }
-        
+
+        /**
+         * Activates this level.
+         */
         public activate(): void {
             this._scene.activate();
         }
 
+        /**
+         * Deactivates this level. Objects contained within will not receive messages while inactive.
+         */
         public deactivate(): void {
             this._scene.deactivate();
         }
 
+        /**
+         * Updates this level.
+         * @param dt The delta time since the last frame in milliseconds.
+         */
         public update( dt: number ): void {
             this._scene.update( dt );
         }
