@@ -1,3 +1,21 @@
-# bullshift
+# BullShift
 
-A HTML5 sokoban game. Currently this game is under construction. It is also a challenge to develop a game in less than 24 hours total time.
+A HTML5 sokoban game. Currently this game is under construction. It is also a challenge to develop a game in less than 24 hours total time. To clarify, this means 24 hours of *development* time, not one calendar day.
+
+## Progress
+For now, I'll be keeping progress in a log format here. Eventually I will write up an article on this when the project is finished.
+
+### Hour Breakdown
+1. Project scaffolding, set up HTML/CSS and basic JS file. Inclusion of PIXI library and game loop setup.
+2. Setup game "class" in JS, setup basic messaging.
+3. Setup GameObjects and interfaces.
+4. Setup Components and interfaces.
+5. Setup basic level, begin support for configuration file loading.
+6. Got tired of the headaches of implementing "classes" in Javascript. Converted entire project to TypeScript.
+7. Finished converting to TypeScript. Added SpriteComponent. Created GitHub repo and checked in code for the first time.
+8. Added BaseGameObject class, fixed messaging.
+9. Began work on AnimatedSprites.
+10. Finished AnimatedSprites.
+11. Added AssetLoader and AssetManager to streamline asset loading process.
+12. Began TileMap implementation.
+13. Finished TileMap implementation. Added a *lot* of documentation comments. Added message broadcasting.
