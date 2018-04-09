@@ -17,5 +17,5 @@ For now, I'll be keeping progress in a log format here. Eventually I will write 
 9. Began work on AnimatedSprites.
 10. Finished AnimatedSprites.
 11. Added AssetLoader and AssetManager to streamline asset loading process.
-12. Began TileMap implementation.
-13. Finished TileMap implementation. Added a *lot* of documentation comments. Added message broadcasting.
+12. Began TileMap implementation. Created some "better" assets to test with.
+13. Finished TileMap implementation. Added a *lot* of documentation comments. Added message broadcasting. Past halfway point now, starting to think about which features to cut.
