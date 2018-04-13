@@ -19,3 +19,5 @@ For now, I'll be keeping progress in a log format here. Eventually I will write 
 11. Added AssetLoader and AssetManager to streamline asset loading process.
 12. Began TileMap implementation. Created some "better" assets to test with.
 13. Finished TileMap implementation. Added a *lot* of documentation comments. Added message broadcasting. Past halfway point now, starting to think about which features to cut.
+14. Added ability to unsubscribe to messages. Also added spawn component (which listens for messages).
+15. Tweaked/added assets. Updated tile map. Decided on cutting pickup items/powerups feature. Can add after project completion.
