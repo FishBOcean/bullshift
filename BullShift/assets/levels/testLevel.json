@@ -46,19 +46,21 @@
       },
       {
         "name": "tileMap",
-        "x": 256,
-        "y": 256,
+        "x": 0,
+        "y": 0,
         "components": [
           "mainTileMap"
         ]
       },
       {
-        "name": "player",
-        "x": 64,
+        "name": "world",
+        "comment": "A world-level object that contains non-renderable components for scene management.",
+        "x": 0,
         "y": 0,
+        "visible": false,
         "components": [
-          "playerSpriteComponent",
-          "playerMoveComponent"
+          "playerSpawn",
+          "playerSpriteComponent"
         ]
       }
     ]
@@ -74,12 +76,28 @@
         "asset": "assets/jethro.png"
       },
       {
+        "name": "blankSpriteComponent",
+        "asset": "assets/blank.png"
+      },
+      {
         "name": "grassSpriteComponent",
         "asset": "assets/grass.png"
       },
       {
         "name": "crateSpriteComponent",
         "asset": "assets/crate.png"
+      },
+      {
+        "name": "fenceForwardSpriteComponent",
+        "asset": "assets/fence_forward.png"
+      },
+      {
+        "name": "fenceLeftSpriteComponent",
+        "asset": "assets/fence_left.png"
+      },
+      {
+        "name": "fenceRightSpriteComponent",
+        "asset": "assets/fence_right.png"
       }
     ],
     "animatedSprite": [
@@ -132,27 +150,64 @@
         ]
       }
     ],
+    "spawn": [
+      {
+        "name": "playerSpawn",
+        "triggerMessage": "LEVEL_READY",
+        "objectName": "player",
+        "spawnPositionX": 320,
+        "spawnPositionY": 192,
+        "components": [
+          "playerSpriteComponent",
+          "playerMoveComponent"
+        ]
+      }
+    ],
     "tileMap": [
       {
         "name": "mainTileMap",
         "tileSet": "mainTileSet",
-        "tilesWide": 10,
-        "tilesHigh": 10,
+        "tilesWide": 20,
+        "tilesHigh": 14,
         "layers": [
           {
-            "tilesWide": 10,
-            "tilesHigh": 10,
+            "tilesWide": 20,
+            "tilesHigh": 14,
             "tileIDs": [
-              1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-              1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-              1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-              1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-              1, 0, 0, 0, 1, 1, 0, 0, 0, 1,
-              1, 0, 0, 0, 1, 0, 0, 0, 0, 1,
-              1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-              1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-              1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-              1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+            ]
+          },
+        {
+            "tilesWide": 20,
+            "tilesHigh": 14,
+            "tileIDs": [
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 4, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
             ]
           }
         ]
@@ -162,12 +217,21 @@
       {
         "name": "mainTileSet",
         "tiles": [
+          "blankTile",
           "grassTile",
-          "crateTile"
+          "crateTile",
+          "fenceForward",
+          "fenceLeft",
+          "fenceRight"
         ]
       }
     ],
     "tile": [
+      {
+        "name": "blankTile",
+        "type": "background",
+        "spriteComponent": "blankSpriteComponent"
+      },
       {
         "name": "grassTile",
         "type": "background",
@@ -177,6 +241,21 @@
         "name": "crateTile",
         "type": "background",
         "spriteComponent": "crateSpriteComponent"
+      },
+      {
+        "name": "fenceForward",
+        "type": "background",
+        "spriteComponent": "fenceForwardSpriteComponent"
+      },
+      {
+        "name": "fenceLeft",
+        "type": "background",
+        "spriteComponent": "fenceLeftSpriteComponent"
+      },
+      {
+        "name": "fenceRight",
+        "type": "background",
+        "spriteComponent": "fenceRightSpriteComponent"
       }
     ]
   }

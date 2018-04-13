@@ -37,6 +37,14 @@
             this._container.y = value;
         }
 
+        public get visible(): boolean {
+            return this._container.visible;
+        }
+
+        public set visible( visible: boolean ) {
+            this._container.visible = visible;
+        }
+
         public onSceneAdd( scene: Scene ): void {
             this._scene = scene;
         }

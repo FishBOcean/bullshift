@@ -63,6 +63,15 @@
         }
 
         /**
+         * Removes a subscription from the provided message name.
+         * @param name The name of the message to remove.
+         * @param handler The handler to remove.
+         */
+        public static unsubscribe( name: string, handler: IMessageHandler ): void {
+            MessageBus.removeSubscriber( name, handler );
+        }
+
+        /**
          * Sends this message.
          */
         public send(): void {
@@ -106,13 +115,29 @@
          * @param name The name of the message to subscribe to.
          * @param handler The handler for the subscription.
          */
-        public static addSubscriber( name: string, handler: IMessageHandler ) {
+        public static addSubscriber( name: string, handler: IMessageHandler ): void {
             console.log( "Adding subscription for: " + name );
             if ( !MessageBus._inst._subscriptions[name] ) {
                 MessageBus._inst._subscriptions[name] = [];
             }
 
             MessageBus._inst._subscriptions[name].push( handler );
+        }
+
+        /**
+         * Removes a subscriber from the system.
+         * @param name The name of the message to unsubscribe from.
+         * @param handler The handler to unsubscribe.
+         */
+        public static removeSubscriber( name: string, handler: IMessageHandler ): void {
+            console.log( "Removing subscription for: " + name );
+            if ( !MessageBus._inst._subscriptions[name] ) {
+                console.warn( "Subscription does not exist:" + name );
+            }
+
+            let index = MessageBus._inst._subscriptions[name].indexOf( handler );
+
+            MessageBus._inst._subscriptions[name].splice( index, 1 );
         }
 
         /**

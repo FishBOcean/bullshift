@@ -114,6 +114,10 @@ module BullShift {
             this._scene.update( dt );
         }
 
+        public addObject( object: GameObject ): void {
+            this._scene.addObject( object );
+        }
+
         private createObjects( configSection: any, parentObject: GameObject ): void {
             for ( let o in configSection ) {
                 let objConfig = configSection[o];
@@ -123,6 +127,7 @@ module BullShift {
                 }
 
                 let obj = new GameObject( objConfig.name );
+                console.info( "Object:", obj );
                 // TODO: Check if a game object with that name already exists.
 
                 // TODO: pass config to game object and let it parse the config.
@@ -132,6 +137,11 @@ module BullShift {
                 if ( objConfig.y ) {
                     obj.y = objConfig.y;
                 }
+
+                if ( objConfig.visible !== undefined ) {
+                    obj.visible = objConfig.visible;
+                }
+
 
                 // Link components.
                 if ( objConfig.components ) {

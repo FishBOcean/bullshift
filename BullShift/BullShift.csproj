@@ -102,7 +102,6 @@
     <Content Include="assets\player.png" />
     <Content Include="index.html" />
     <Content Include="lib\pixi.js" />
-    <Content Include="lib\pixi.min.js" />
     <Content Include="main.css" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -121,6 +120,8 @@
     <TypeScriptCompile Include="components\IComponentFactory.ts" />
     <TypeScriptCompile Include="components\move\MoveComponent.ts" />
     <TypeScriptCompile Include="components\move\MoveComponentFactory.ts" />
+    <TypeScriptCompile Include="components\spawn\spawnComponent.ts" />
+    <TypeScriptCompile Include="components\spawn\spawnComponentFactory.ts" />
     <TypeScriptCompile Include="components\sprite\SpriteComponent.ts" />
     <TypeScriptCompile Include="components\sprite\SpriteComponentFactory.ts" />
     <TypeScriptCompile Include="components\tileMap\tileComponent.ts" />

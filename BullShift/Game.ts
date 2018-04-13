@@ -14,6 +14,7 @@ module BullShift {
     }
 
     export class Game implements IMessageHandler {
+        
         private _application: PIXI.Application;
         private _playerObj: GameObject;
         private _gameScreens: { [key: string]: GameScreen } = {};
@@ -43,6 +44,7 @@ module BullShift {
 
                     console.log( "Load complete. Starting gameplay..." );
                     this._state = GameState.PLAYING;
+                    Message.createAndSend( "LEVEL_READY", this );
                 } else {
                     console.log( "Level loading..." );
                 }
@@ -83,7 +85,7 @@ module BullShift {
             console.info( "start" );
 
             // TODO: fit to screen with given aspect ratio.
-            this._application = new PIXI.Application( 800, 600, { backgroundColor: 0x1099bb } );
+            this._application = new PIXI.Application( 640, 480, { backgroundColor: 0x000000 } );
             document.getElementById( 'content' ).appendChild( this._application.view );
 
             BullShift.AssetManager.initialize( this._application );
@@ -106,6 +108,10 @@ module BullShift {
                 default:
                     break;
             }
+        }
+
+        public static getActiveLevel(): Level {
+            return g_game._activeLevel;
         }
 
         private setActiveLevel( level: Level ): void {
