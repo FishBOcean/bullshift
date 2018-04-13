@@ -132,6 +132,13 @@ module BullShift {
          * Unloads this component.
          */
         public unload(): void {
+            Message.unsubscribe( this._triggerMessage, this );
+        }
+
+        /**
+         * Destroys this component.
+         */
+        public destroy(): void {
         }
 
         /**
@@ -178,7 +185,7 @@ module BullShift {
             }
 
             obj.initialize( this._components );
-            
+
             Game.getActiveLevel().addObject( obj );
 
             obj.load();

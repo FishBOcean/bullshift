@@ -144,6 +144,17 @@ module BullShift {
             }
         }
 
+        /**
+         * Destroys this component.
+         */
+        public destroy(): void {
+            this._tileSet.destroy();
+
+            for ( let i = 0; i < this._layers.length; ++i ) {
+                this._layers[i].destroy();
+            }
+        }
+
         public update( dt: number ): void {
             //this._tileSet.update( dt );
             for ( let i = 0; i < this._layers.length; ++i ) {

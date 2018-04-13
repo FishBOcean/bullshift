@@ -125,6 +125,16 @@ module BullShift {
         }
 
         /**
+         * Destroys this component.
+         */
+        public destroy(): void {
+            this._sprite.destroy();
+            for ( let frame in this._frames ) {
+                this._frames[frame].destroy();
+            }
+        }
+
+        /**
          * Performs update logic on this component.
          * @param dt The delta time in milliseconds since the last frame.
          */

@@ -124,6 +124,15 @@
         }
 
         /**
+         * Destroys this component.
+         */
+        public destroy(): void {
+            for ( let i = 0; i < this._tiles.length; ++i ) {
+                this._tiles[i].destroy();
+            }
+        }
+
+        /**
          * Updates this layer.
          * @param dt The delta time since the last frame in milliseconds.
          */

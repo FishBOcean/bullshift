@@ -11,7 +11,7 @@ module BullShift {
         private _preloadingDone: boolean = false;
         private _configuration: any;
         private _scene: Scene;
-        private _application: PIXI.Application;
+        private _container: PIXI.Container;
         private _components: ComponentDictionary = {};
 
         /**
@@ -21,17 +21,17 @@ module BullShift {
 
         /**
          * Creates a new level.
-         * @param application The application handle.
+         * @param container The container object this level's scene will be added to.
          * @param name The name of this level.
          * @param jsonAssetPath The JSON configuration path for this level.
          */
-        public constructor( application: PIXI.Application, name: string, jsonAssetPath: string ) {
+        public constructor( container: PIXI.Container, name: string, jsonAssetPath: string ) {
             this.name = name;
-            this._application = application;
+            this._container = container;
             this._jsonAsset = jsonAssetPath;
             this._lookup = name + "_levelFile"
 
-            this._scene = new Scene( this._application, this.name + "_scene" );
+            this._scene = new Scene( this._container, this.name + "_scene" );
 
             let loader = new PIXI.loaders.Loader();
             loader.add( this._lookup, this._jsonAsset );
@@ -90,6 +90,13 @@ module BullShift {
          */
         public unload(): void {
             this._scene.unload();
+        }
+
+        /**
+         * Unloads this level.
+         */
+        public destroy(): void {
+            this._scene.destroy();
         }
 
         /**

@@ -82,7 +82,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\crate.png" />
-    <Content Include="assets\levels\testLevel.json" />
+    <Content Include="assets\levels\01_01.json" />
+    <Content Include="assets\levels\01_02.json" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

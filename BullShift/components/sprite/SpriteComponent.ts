@@ -149,7 +149,13 @@ module BullShift {
          * Unloads this component.
          */
         public unload(): void {
-            this._textureAsset.destroy();
+            this._textureAsset.unload();
+        }
+
+        /**
+         * Destroys this component.
+         */
+        public destroy(): void {
             this._sprite.destroy();
         }
 

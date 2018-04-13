@@ -116,6 +116,18 @@
                 this._children[o].unload();
             }
         }
+
+        public destroy(): void {
+            for ( let c in this._components ) {
+                this._components[c].destroy();
+            }
+            this._components.length = 0;
+
+            for ( let o in this._children ) {
+                this._children[o].destroy();
+            }
+            this._children.length = 0;
+        }
     }
 
     export function isRenderable( object: any ): object is IRenderableComponent {

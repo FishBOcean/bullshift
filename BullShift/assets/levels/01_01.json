@@ -1,0 +1,262 @@
+﻿{
+  "name": "Level 1-1",
+  "scene": {
+    "objects": [
+      {
+        "name": "bg_0",
+        "x": 0,
+        "y": 0,
+        "components": [
+          "testBgSpriteComponent"
+        ]
+      },
+      {
+        "name": "bg_1",
+        "x": 32,
+        "y": 32,
+        "components": [
+          "testBgSpriteComponent"
+        ],
+        "children": [
+          {
+            "name": "bg_3",
+            "x": 96,
+            "y": 96,
+            "components": [
+              "testBgSpriteComponent"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "bg_2",
+        "x": 64,
+        "y": 64,
+        "components": [
+          "testBgSpriteComponent"
+        ]
+      },
+      {
+        "name": "animatedTestObj",
+        "x": 128,
+        "y": 128,
+        "components": [
+          "animatedTestComponent"
+        ]
+      },
+      {
+        "name": "tileMap",
+        "x": 0,
+        "y": 0,
+        "components": [
+          "mainTileMap"
+        ]
+      },
+      {
+        "name": "world",
+        "comment": "A world-level object that contains non-renderable components for scene management.",
+        "x": 0,
+        "y": 0,
+        "visible": false,
+        "components": [
+          "playerSpawn",
+          "playerSpriteComponent"
+        ]
+      }
+    ]
+  },
+  "components": {
+    "sprite": [
+      {
+        "name": "testBgSpriteComponent",
+        "asset": "assets/background.png"
+      },
+      {
+        "name": "playerSpriteComponent",
+        "asset": "assets/jethro.png"
+      },
+      {
+        "name": "blankSpriteComponent",
+        "asset": "assets/blank.png"
+      },
+      {
+        "name": "grassSpriteComponent",
+        "asset": "assets/grass.png"
+      },
+      {
+        "name": "crateSpriteComponent",
+        "asset": "assets/crate.png"
+      },
+      {
+        "name": "fenceForwardSpriteComponent",
+        "asset": "assets/fence_forward.png"
+      },
+      {
+        "name": "fenceLeftSpriteComponent",
+        "asset": "assets/fence_left.png"
+      },
+      {
+        "name": "fenceRightSpriteComponent",
+        "asset": "assets/fence_right.png"
+      }
+    ],
+    "animatedSprite": [
+      {
+        "name": "animatedTestComponent",
+        "asset": "assets/animation_test.png",
+        "frameSizeX": 32,
+        "frameSizeY": 32,
+        "totalFrames": 4,
+        "frameRate": 4,
+        "defaultAnimation": "animA",
+        "animations": [
+          {
+            "name": "animA",
+            "frameIndices": [ 0, 3, 1, 2 ],
+            "frameRate": 1
+          },
+          {
+            "name": "animB",
+            "frameIndices": [ 0, 1, 2, 3 ],
+            "frameRate": 4
+          }
+        ]
+      }
+    ],
+    "move": [
+      {
+        "name": "playerMoveComponent",
+        "messages": [
+          {
+            "name": "Player:moveLeft",
+            "axis": "x",
+            "amount": -32
+          },
+          {
+            "name": "Player:moveRight",
+            "axis": "x",
+            "amount": 32
+          },
+          {
+            "name": "Player:moveUp",
+            "axis": "y",
+            "amount": -32
+          },
+          {
+            "name": "Player:moveDown",
+            "axis": "y",
+            "amount": 32
+          }
+        ]
+      }
+    ],
+    "spawn": [
+      {
+        "name": "playerSpawn",
+        "triggerMessage": "LEVEL_READY",
+        "objectName": "player",
+        "spawnPositionX": 320,
+        "spawnPositionY": 192,
+        "components": [
+          "playerSpriteComponent",
+          "playerMoveComponent"
+        ]
+      }
+    ],
+    "tileMap": [
+      {
+        "name": "mainTileMap",
+        "tileSet": "mainTileSet",
+        "tilesWide": 20,
+        "tilesHigh": 14,
+        "layers": [
+          {
+            "tilesWide": 20,
+            "tilesHigh": 14,
+            "tileIDs": [
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+            ]
+          },
+        {
+            "tilesWide": 20,
+            "tilesHigh": 14,
+            "tileIDs": [
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 4, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+            ]
+          }
+        ]
+      }
+    ],
+    "tileSet": [
+      {
+        "name": "mainTileSet",
+        "tiles": [
+          "blankTile",
+          "grassTile",
+          "crateTile",
+          "fenceForward",
+          "fenceLeft",
+          "fenceRight"
+        ]
+      }
+    ],
+    "tile": [
+      {
+        "name": "blankTile",
+        "type": "background",
+        "spriteComponent": "blankSpriteComponent"
+      },
+      {
+        "name": "grassTile",
+        "type": "background",
+        "spriteComponent": "grassSpriteComponent"
+      },
+      {
+        "name": "crateTile",
+        "type": "background",
+        "spriteComponent": "crateSpriteComponent"
+      },
+      {
+        "name": "fenceForward",
+        "type": "background",
+        "spriteComponent": "fenceForwardSpriteComponent"
+      },
+      {
+        "name": "fenceLeft",
+        "type": "background",
+        "spriteComponent": "fenceLeftSpriteComponent"
+      },
+      {
+        "name": "fenceRight",
+        "type": "background",
+        "spriteComponent": "fenceRightSpriteComponent"
+      }
+    ]
+  }
+}

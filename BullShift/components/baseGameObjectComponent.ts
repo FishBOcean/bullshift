@@ -53,6 +53,11 @@ module BullShift {
         public abstract unload(): void;
 
         /**
+         * Destroys this component.
+         */
+        public abstract destroy(): void;
+
+        /**
          * Updates this component.
          * @param dt The delta time since the last frmae in milliseconds.
          */

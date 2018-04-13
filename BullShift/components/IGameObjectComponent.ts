@@ -39,6 +39,11 @@ module BullShift {
         unload(): void;
 
         /**
+         * Destroys this component.
+         */
+        destroy(): void;
+
+        /**
          * Updates this component.
          * @param dt The delta time since the last frmae in milliseconds.
          */

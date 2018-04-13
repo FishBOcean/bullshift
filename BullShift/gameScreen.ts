@@ -1,17 +1,17 @@
 ﻿module BullShift {
 
     export abstract class GameScreen {
-        protected _application: PIXI.Application;
+        protected _container: PIXI.Container;
         protected _scene: Scene;
         protected _isActive: boolean;
 
         public name: string;
 
-        public constructor( application: PIXI.Application, name: string ) {
-            this._application = application;
+        public constructor( container: PIXI.Container, name: string ) {
+            this._container = container;
             this.name = name;
             this._isActive = false;
-            this._scene = new BullShift.Scene( application, "GSScene_" + name );
+            this._scene = new BullShift.Scene( container, "GSScene_" + name );
         }
 
         public get preloading(): boolean {

@@ -108,6 +108,15 @@
         }
 
         /**
+         * Destroys this component.
+         */
+        public destroy(): void {
+            for ( let c in this._tileComponents ) {
+                this._tileComponents[c].destroy();
+            }
+        }
+
+        /**
          * Updates this component.
          * @param dt The delta time since the last frame in milliseconds.
          */

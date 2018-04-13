@@ -132,6 +132,20 @@ module BullShift {
          * Unloads this component.
          */
         public unload(): void {
+
+            // unsubscribe from all messages.
+            let messageConfigs = ( this._config as MoveComponentConfig ).messages;
+            for ( let m in messageConfigs ) {
+                let mcfg = messageConfigs[m];
+                this._subscribedMessages.push( mcfg );
+                Message.unsubscribe( mcfg.name, this );
+            }
+        }
+
+        /**
+         * Destroys this component.
+         */
+        public destroy(): void {
         }
 
         /**

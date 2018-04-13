@@ -185,6 +185,13 @@
         }
 
         /**
+         * Destroys this component.
+         */
+        public destroy(): void {
+            this._spriteComponent.destroy();
+        }
+
+        /**
          * Updates this component.
          * @param dt The delta time in milliseconds since the last frame.
          */

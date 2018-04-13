@@ -21,7 +21,9 @@
         public unload(): void {
             this._references--;
             if ( this._references === 0 ) {
+                console.debug( "Destroying asset:" + this.name );
                 this.destroy;
+                AssetManager.removeAsset( this.name );
             }
         }
 
@@ -33,7 +35,6 @@
     export class TextureAsset extends BaseAsset {
 
         private _internalTexture: PIXI.Texture;
-        //private _isLoaded: boolean = false;
         private _loader: PIXI.loaders.Loader;
 
         public constructor( name: string, assetPath: string ) {
@@ -41,13 +42,7 @@
 
             this._loader = new PIXI.loaders.Loader();
             this._loader.add( this.assetPath, this.assetPath );
-            //this._loader.onLoad = this.onLoaded.bind( this );
             this._loader.load( this.onLoaded.bind( this ) );
-            //this._internalTexture.baseTexture.
-
-            //this._internalTexture = PIXI.Texture.fromImage( this.assetPath );
-
-
         }
 
         public get internalData(): PIXI.Texture {
@@ -73,11 +68,10 @@
 
             this._internalTexture = resource.texture;
 
-            // Load offscreen first.
+            // Load offscreen first. This ensures the asset sizes are obtainable.
             let temp = new PIXI.Sprite( this._internalTexture );
             temp.x = -9999;
             temp.y = -9999;
-            AssetManager.PrepareAsset( temp );
         }
     }
 
@@ -100,7 +94,10 @@
             }
         }
 
-
+        public static removeAsset( assetName: string ): void {
+            AssetManager._inst._assets[assetName] = undefined;
+            delete AssetManager._inst._assets[assetName];
+        }
 
         public static getAsset( assetPath: string ): BaseAsset {
             if ( AssetManager._inst._assets[assetPath] ) {
@@ -119,7 +116,7 @@
                     case "gif":
                     case "png":
                         asset = new TextureAsset( assetPath, assetPath );
-                        
+
                         break;
                     default:
                         throw new Error( "The file extension " + ext + " is not supported." );
@@ -129,17 +126,5 @@
                 return asset;
             }
         }
-
-
-
-        public static PrepareAsset( displayObj: PIXI.DisplayObject ): void {
-
-            // Create a temporary sprite and add it to the scene.
-            //AssetManager._inst._sceneObj.addChild( displayObj );
-
-            //console.log( "forcing render..." );
-            //AssetManager._inst._application.render();
-        }
-
     }
 }
