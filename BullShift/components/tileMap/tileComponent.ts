@@ -155,13 +155,12 @@
         }
 
         /**
-         * Initializes this component and links it to any requird components.
+         * Initializes this component and links it to any required components.
          * @param components A collection of all components to which this component can be linked.
          */
         public initialize( components: ComponentDictionary ): void {
 
             // Link the component by name, clone it then initialize the clone.
-            console.log( "Linking sprite component to tile: " + this._spriteComponentName + "..." );
             this._spriteComponent = components[this._spriteComponentName].clone() as SpriteComponent;
             if ( this._spriteComponent === undefined ) {
                 throw new Error( "Sprite component not found: " + this._spriteComponentName );

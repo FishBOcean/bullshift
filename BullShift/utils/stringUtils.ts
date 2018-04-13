@@ -16,5 +16,15 @@ module BullShift {
         public static getFullFileName( filePath: string ): string {
             return filePath.split( /[\\/]/ ).pop();            
         }
+
+        public static getPaddedNumberString( n: number, padAmount: number ): string {
+            let str = "" + n;
+            let pad = "";
+            for ( let i = 0; i < padAmount; ++i ) {
+                pad += "0";
+            }
+
+            return pad.substring( 0, pad.length - str.length ) + str;
+        }
     }
 }
