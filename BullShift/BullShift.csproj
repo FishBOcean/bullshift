@@ -121,6 +121,7 @@
     <TypeScriptCompile Include="components\IComponentFactory.ts" />
     <TypeScriptCompile Include="components\move\MoveComponent.ts" />
     <TypeScriptCompile Include="components\move\MoveComponentFactory.ts" />
+    <TypeScriptCompile Include="components\sokobanController\crate.ts" />
     <TypeScriptCompile Include="components\sokobanController\sokobanControllerComponent.ts" />
     <TypeScriptCompile Include="components\sokobanController\sokobanControllerComponentFactory.ts" />
     <TypeScriptCompile Include="components\spawn\spawnComponent.ts" />

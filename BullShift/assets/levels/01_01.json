@@ -129,7 +129,14 @@
         "name": "mainController",
         "tileMap": "tileMap",
         "tileMapComponent": "mainTileMap",
-        "playerSprite": "playerSpriteComponent"
+        "playerSprite": "playerSpriteComponent",
+        "crateSprite": "crateSpriteComponent",
+        "crates": [
+          {
+            "x": 13,
+            "y": 6
+          }
+        ]
       }
     ],
     "tileMap": [

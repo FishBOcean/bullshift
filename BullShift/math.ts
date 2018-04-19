@@ -32,6 +32,10 @@
             v.y = this.y;
             return v;
         }
+
+        public equals( v: Vector2 ): boolean {
+            return ( v.x === this.x && v.y === this.y );
+        }
     }
 
     export class Vector3 {
@@ -45,6 +49,10 @@
             v.y = this.y;
             v.z = this.z;
             return v;
+        }
+
+        public equals( v: Vector3 ): boolean {
+            return ( v.x === this.x && v.y === this.y && v.z === this.z );
         }
     }
 
@@ -61,6 +69,10 @@
             v.z = this.z;
             v.w = this.w;
             return v;
+        }
+
+        public equals( v: Vector4 ): boolean {
+            return ( v.x === this.x && v.y === this.y && v.z === this.z && v.w === this.w );
         }
     }
 }

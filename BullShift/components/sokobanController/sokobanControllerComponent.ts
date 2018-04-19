@@ -1,11 +1,21 @@
 ﻿module BullShift {
 
+    export class CrateConfig {
+        public x: number;
+        public y: number;
+    }
+
+    /**
+     * Configuration for the sokoban controller.
+     */
     export class SokobanControllerComponentConfig implements IComponentConfig {
 
         public name: string;
         public tileMap: string;
         public tileMapComponent: string;
         public playerSprite: string;
+        public crateSprite: string;
+        public crates: CrateConfig[] = [];
 
         public populateFromJson( jsonConfiguration: any ): void {
 
@@ -28,10 +38,22 @@
                 throw new Error( "SokobanControllerComponentConfig json must contain a playerSprite!" );
             }
             this.playerSprite = jsonConfiguration.playerSprite;
+
+            if ( !jsonConfiguration.crateSprite ) {
+                throw new Error( "SokobanControllerComponentConfig json must contain a crateSprite!" );
+            }
+            this.crateSprite = jsonConfiguration.crateSprite;
+
+            if ( !jsonConfiguration.crates ) {
+                throw new Error( "SokobanControllerComponentConfig json must contain a crates!" );
+            }
+            for ( let c in jsonConfiguration.crates ) {
+                this.crates.push( jsonConfiguration.crates[c] as CrateConfig );
+            }
         }
     }
 
-    enum PlayerMoveDirection {
+    export enum PlayerMoveDirection {
         NONE,
         UP,
         DOWN,
@@ -49,12 +71,15 @@
         private _tileMapComponentName: string;
         private _tileMapObjectName: string;
         private _playerSpriteComponentName: string;
+        private _crateSpriteName: string;
 
         private _tileMap: TileMapComponent;
         private _moveDirection: PlayerMoveDirection = PlayerMoveDirection.NONE;
         private _amountMoved: number = 0;
         private _moveSpeed: number = 4;
         private _currentTileIndices: Vector2 = new Vector2();
+
+        private _crates: Crate[] = [];
 
         /**
          * The name of this controller.
@@ -76,6 +101,7 @@
             this._tileMapComponentName = config.tileMapComponent;
             this._tileMapObjectName = config.tileMap;
             this._playerSpriteComponentName = config.playerSprite;
+            this._crateSpriteName = config.crateSprite;
         }
 
         /**
@@ -184,7 +210,7 @@
                             break;
                     }
 
-                    if ( checkDirection !== PlayerMoveDirection.NONE && this.checkIntendedMove( checkDirection ) ) {
+                    if ( checkDirection !== PlayerMoveDirection.NONE && this.checkIntendedMove( checkDirection ) === true ) {
                         this._moveDirection = checkDirection;
                     }
                 }
@@ -202,22 +228,27 @@
 
             // Get tiles for all layers in the intended move spot. If it is a wall on *any* level, boot out.
             let intendedCoords = this._currentTileIndices.clone();
+            let intendedCoords2Out = this._currentTileIndices.clone();
             switch ( intendedDirection ) {
                 default:
                 case PlayerMoveDirection.LEFT:
                     intendedCoords.x--;
+                    intendedCoords2Out.x -= 2;
                     break;
                 case PlayerMoveDirection.RIGHT:
                     intendedCoords.x++;
+                    intendedCoords2Out.x += 2;
                     break;
                 case PlayerMoveDirection.UP:
                     intendedCoords.y--;
+                    intendedCoords2Out.y -= 2;
                     break
                 case PlayerMoveDirection.DOWN:
                     intendedCoords.y++;
+                    intendedCoords2Out.y += 2;
                     break;
             }
-            
+
             let tiles = this._tileMap.getTilesAt( intendedCoords.x, intendedCoords.y );
             for ( let t in tiles ) {
                 if ( tiles[t].tileType === TileType.WALL ) {
@@ -225,13 +256,36 @@
                 }
             }
 
-            // TODO: Check if there is a crate in the next tile. If there is, check the tile after that
-            // to determine if it is another crate or a wall. Return false if so.
+            // Check if there is a crate in the next tile. 
+            for ( let c in this._crates ) {
+                let crate = this._crates[c];
+                if ( crate.tileIndices.equals( intendedCoords ) ) {
+                    
+                    // Check the crates first
+                    for ( let c2 in this._crates ) {
+                        if ( this._crates[c2].tileIndices.equals( intendedCoords2Out ) ) {
+                            console.log( "crate found! cancelling" );
+                            return false;
+                        }
+                    }
 
-            // If the second test passes, move the crate along with the player and send a message to the
-            // The tile then should check if it is over a goal space. If so, it should notify this controller
-            // that a required tile has been placed on a goal.
+                    // Check for a wall.
+                    let tiles2Out = this._tileMap.getTilesAt( intendedCoords2Out.x, intendedCoords2Out.y );
+                    for ( let t in tiles2Out ) {
+                        if ( tiles2Out[t].tileType === TileType.WALL ) {
+                            console.log( "wall found! cancelling" );
+                            return false;
+                        }
+                    }
 
+                    // If we get here, all tests passed. Move the crate along with the player.
+                    crate.moveToTilePosition( intendedCoords2Out.x, intendedCoords2Out.y );
+
+                    // TODO: The tile then should check if it is over a goal space. If so, it should notify this controller
+                    // that a required tile has been placed on a goal.
+                }
+            }
+            
             return true;
         }
 
@@ -249,12 +303,27 @@
             this._player.addComponent( this._components[this._playerSpriteComponentName].clone() );
 
 
-            // Initialize, spawn and load the new object.
+            // Initialize, spawn and load the new player object.
             this._player.initialize( this._components );
 
             Game.getActiveLevel().addObject( this._player );
 
             this._player.load();
+
+            // Initialize, spawn and load crates.
+            let config = this._config as SokobanControllerComponentConfig;
+            for ( let i = 0; i < config.crates.length; ++i ) {
+                this._crates.push( new Crate( config.crates[i].x, config.crates[i].y, i, config.crateSprite ) );
+            }
+
+            for ( let c in this._crates ) {
+                let crate = this._crates[c];
+                crate.x = Game.TILE_SIZE * crate.tileIndices.x;
+                crate.y = Game.TILE_SIZE * crate.tileIndices.y;
+                crate.initialize( this._components );
+                Game.getActiveLevel().addObject( crate );
+                crate.load();
+            }
         }
     }
 }

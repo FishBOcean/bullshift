@@ -87,7 +87,14 @@
         "name": "mainController",
         "tileMap": "tileMap",
         "tileMapComponent": "mainTileMap",
-        "playerSprite": "playerSpriteComponent"
+        "playerSprite": "playerSpriteComponent",
+        "crateSprite": "crateSpriteComponent",
+        "crates": [
+          {
+            "x": 13,
+            "y": 6
+          }
+        ]
       }
     ],
     "tileMap": [
@@ -168,22 +175,22 @@
       },
       {
         "name": "crateTile",
-        "type": "background",
+        "type": "movable",
         "spriteComponent": "crateSpriteComponent"
       },
       {
         "name": "fenceForward",
-        "type": "background",
+        "type": "wall",
         "spriteComponent": "fenceForwardSpriteComponent"
       },
       {
         "name": "fenceLeft",
-        "type": "background",
+        "type": "wall",
         "spriteComponent": "fenceLeftSpriteComponent"
       },
       {
         "name": "fenceRight",
-        "type": "background",
+        "type": "wall",
         "spriteComponent": "fenceRightSpriteComponent"
       }
     ]

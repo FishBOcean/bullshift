@@ -23,3 +23,4 @@ For now, I'll be keeping progress in a log format here. Eventually I will write 
 15. Tweaked/added assets. Updated tile map. Decided on cutting pickup items/powerups feature. Can add after project completion.
 16. Multi-level loading working. Fixed bugs with object and component destruction. Tied a temporary UI control to switch levels.
 17. Tweened player movement added. Sokoban Controller component added, which tracks game state. TileMap checks added for bounds.
+18. Added crates. Player is now able to push them about and they collide correctly with walls and other crates.
