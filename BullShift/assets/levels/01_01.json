@@ -61,7 +61,8 @@
         "visible": false,
         "components": [
           "mainController",
-          "playerSpriteComponent"
+          "playerSpriteComponent",
+          "goalSpriteComponent"
         ]
       }
     ]
@@ -99,6 +100,10 @@
       {
         "name": "fenceRightSpriteComponent",
         "asset": "assets/fence_right.png"
+      },
+      {
+        "name": "goalSpriteComponent",
+        "asset": "assets/goal.png"
       }
     ],
     "animatedSprite": [
@@ -131,9 +136,16 @@
         "tileMapComponent": "mainTileMap",
         "playerSprite": "playerSpriteComponent",
         "crateSprite": "crateSpriteComponent",
+        "goalSprite": "goalSpriteComponent",
         "crates": [
           {
             "x": 13,
+            "y": 6
+          }
+        ],
+        "goals": [
+          {
+            "x": 7,
             "y": 6
           }
         ]

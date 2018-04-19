@@ -10,6 +10,8 @@ module BullShift {
         private _moveSpeed: number = 4;
         private _direction: PlayerMoveDirection = PlayerMoveDirection.NONE;
 
+        public isOnGoal: boolean = false;
+
         public constructor( xIndex: number, yIndex: number, index: number, spriteName: string ) {
             super( "crate_obj" + index );
 

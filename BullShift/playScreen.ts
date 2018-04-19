@@ -9,11 +9,6 @@ module BullShift {
         private _leftCtrl: GameObject;
         private _rightCtrl: GameObject;
 
-        // TODO: Remove this temp test code.
-        private _world: number = 1;
-        private _level: number = 1;
-        private _maxLevel: number = 2;
-
         public constructor( container: PIXI.Container ) {
             super( container, "PlayScreen" );
         }
@@ -39,9 +34,6 @@ module BullShift {
                 Game.TILE_SIZE * 3,
                 Game.screenHeight - ( Game.TILE_SIZE * 3 ) );
 
-            // NOTE: temporary level switch button.
-            this.addButton( "tempCtrl", 'assets/movable.png', this.tempLoadNext.bind( this ), 10, 10 );
-
             super.initialize();
         }
 
@@ -59,23 +51,6 @@ module BullShift {
 
         private downPressed() {
             Message.createAndSend( "Player:moveDown", this );
-        }
-
-        private tempLoadNext(): void {
-            this._level++;
-            if ( this._level > this._maxLevel ) {
-                this._level = 1;
-            }
-
-            this.loadLevel( this._world, this._level );
-        }
-
-        private loadLevel( world: number, level: number ) {
-            let worldStr = StringUtils.getPaddedNumberString( world, 2 );
-            let levelStr = StringUtils.getPaddedNumberString( level, 2 );
-            let levelName = worldStr + ":" + levelStr;
-            console.log( "Loading level '" + levelName + "'." );
-            Message.createAndSend( "CHANGE_LEVEL", null, levelName );
         }
     }
 }

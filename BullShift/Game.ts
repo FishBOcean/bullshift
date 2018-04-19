@@ -27,6 +27,8 @@ module BullShift {
 
         private _worldRoot: PIXI.Container;
         private _uiRoot: PIXI.Container;
+        private _overlayRoot: PIXI.Container;
+        private _fadeContainer: PIXI.Container;
 
         public static readonly TILE_SIZE: number = 32;
 
@@ -91,8 +93,20 @@ module BullShift {
 
             this._worldRoot = new PIXI.Container();
             this._uiRoot = new PIXI.Container();
+            this._overlayRoot = new PIXI.Container();
             this._application.stage.addChild( this._worldRoot );
             this._application.stage.addChild( this._uiRoot );
+
+            this._fadeContainer = new PIXI.Container();
+            var graphics = new PIXI.Graphics();
+            graphics.beginFill( 0x00000000 );
+            graphics.drawRect( 0, 0, 640, 480 );
+            graphics.endFill();
+            this._fadeContainer.alpha = 0;
+            this._fadeContainer.addChild( graphics );
+            this._overlayRoot.addChild( this._fadeContainer );
+
+            this._application.stage.addChild( this._overlayRoot );
 
             this._levels["01:01"] = new Level( this._worldRoot, "01:01", "assets/levels/01_01.json" );
             this._levels["01:02"] = new Level( this._worldRoot, "01:02", "assets/levels/01_02.json" );
@@ -115,6 +129,13 @@ module BullShift {
                 case "CHANGE_LEVEL":
                     this._unloadLevel = true;
                     this._loadLevelName = message.context as string;
+                    break;
+                case "FADE_OUT":
+
+                    //this._fadeContainer.alpha = 0;
+                    break;
+                case "FADE_IN":
+
                     break;
                 default:
                     break;

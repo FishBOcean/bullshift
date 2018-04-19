@@ -1,6 +1,11 @@
 ﻿module BullShift {
-
+    
     export class CrateConfig {
+        public x: number;
+        public y: number;
+    }
+
+    export class GoalConfig {
         public x: number;
         public y: number;
     }
@@ -15,7 +20,9 @@
         public tileMapComponent: string;
         public playerSprite: string;
         public crateSprite: string;
+        public goalSprite: string;
         public crates: CrateConfig[] = [];
+        public goals: GoalConfig[] = [];
 
         public populateFromJson( jsonConfiguration: any ): void {
 
@@ -34,21 +41,38 @@
             }
             this.tileMapComponent = jsonConfiguration.tileMapComponent;
 
+            // Player sprite
             if ( !jsonConfiguration.playerSprite ) {
                 throw new Error( "SokobanControllerComponentConfig json must contain a playerSprite!" );
             }
             this.playerSprite = jsonConfiguration.playerSprite;
 
+            // Crate sprite
             if ( !jsonConfiguration.crateSprite ) {
                 throw new Error( "SokobanControllerComponentConfig json must contain a crateSprite!" );
             }
             this.crateSprite = jsonConfiguration.crateSprite;
 
+            // Crates
             if ( !jsonConfiguration.crates ) {
                 throw new Error( "SokobanControllerComponentConfig json must contain a crates!" );
             }
             for ( let c in jsonConfiguration.crates ) {
                 this.crates.push( jsonConfiguration.crates[c] as CrateConfig );
+            }
+
+            // Goal sprite
+            if ( !jsonConfiguration.goalSprite ) {
+                throw new Error( "SokobanControllerComponentConfig json must contain a goalSprite!" );
+            }
+            this.goalSprite = jsonConfiguration.goalSprite;
+
+            // Goals
+            if ( !jsonConfiguration.goals ) {
+                throw new Error( "SokobanControllerComponentConfig json must contain a goals!" );
+            }
+            for ( let g in jsonConfiguration.goals ) {
+                this.goals.push( jsonConfiguration.goals[g] as GoalConfig );
             }
         }
     }
@@ -72,6 +96,7 @@
         private _tileMapObjectName: string;
         private _playerSpriteComponentName: string;
         private _crateSpriteName: string;
+        private _goalSpriteName: string;
 
         private _tileMap: TileMapComponent;
         private _moveDirection: PlayerMoveDirection = PlayerMoveDirection.NONE;
@@ -80,6 +105,9 @@
         private _currentTileIndices: Vector2 = new Vector2();
 
         private _crates: Crate[] = [];
+        private _goals: Goal[] = [];
+
+        private _cleared: boolean = false;
 
         /**
          * The name of this controller.
@@ -102,6 +130,7 @@
             this._tileMapObjectName = config.tileMap;
             this._playerSpriteComponentName = config.playerSprite;
             this._crateSpriteName = config.crateSprite;
+            this._goalSpriteName = config.goalSprite;
         }
 
         /**
@@ -187,6 +216,12 @@
         }
 
         public onMessage( message: Message ): void {
+
+            // Do not accept any more messages if the level has been cleared.
+            if ( this._cleared ) {
+                return;
+            }
+
             if ( message.name === SystemMessageName.LEVEL_READY ) {
                 this.spawnComponents();
             } else {
@@ -283,6 +318,15 @@
 
                     // TODO: The tile then should check if it is over a goal space. If so, it should notify this controller
                     // that a required tile has been placed on a goal.
+                    crate.isOnGoal = false;
+                    for ( let g in this._goals ) {
+                        if ( crate.tileIndices.equals( this._goals[g].tileIndices ) ) {
+                            crate.isOnGoal = true;
+                            this.verifyGoalRequirements();
+                            break;
+                        }
+                    }
+                    
                 }
             }
             
@@ -290,6 +334,8 @@
         }
 
         private spawnComponents(): void {
+            
+            let config = this._config as SokobanControllerComponentConfig;
 
             // Save off a reference to the tile map.
             this._tileMap = Game.getActiveLevel().getObject( this._tileMapObjectName ).getComponent( this._tileMapComponentName ) as TileMapComponent;
@@ -311,7 +357,6 @@
             this._player.load();
 
             // Initialize, spawn and load crates.
-            let config = this._config as SokobanControllerComponentConfig;
             for ( let i = 0; i < config.crates.length; ++i ) {
                 this._crates.push( new Crate( config.crates[i].x, config.crates[i].y, i, config.crateSprite ) );
             }
@@ -323,6 +368,39 @@
                 crate.initialize( this._components );
                 Game.getActiveLevel().addObject( crate );
                 crate.load();
+            }
+
+            // Initialize, spawn and load goals.
+            for ( let i = 0; i < config.goals.length; ++i ) {
+                this._goals.push( new Goal( config.goals[i].x, config.goals[i].y, i, config.goalSprite ) );
+            }
+
+            for ( let g in this._goals ) {
+                let goal = this._goals[g];
+                goal.x = Game.TILE_SIZE * goal.tileIndices.x;
+                goal.y = Game.TILE_SIZE * goal.tileIndices.y;
+                goal.initialize( this._components );
+                Game.getActiveLevel().addObject( goal );
+                goal.load();
+            }
+
+            // Verify that the number of crates equals the number of goals
+            if ( this._crates.length !== this._goals.length ) {
+                throw new Error( "Invalid level configuration: Number of crates must equal number of goals." );
+            }
+        }
+
+        private verifyGoalRequirements(): void {
+            let onGoalCount = 0;
+            for ( let c in this._crates ) {
+                if ( this._crates[c].isOnGoal ) {
+                    onGoalCount++;
+                }
+            }
+
+            if ( onGoalCount == this._goals.length ) {
+                this._cleared = true;
+                Message.createAndSend( "LEVEL_CLEARED", this );
             }
         }
     }
