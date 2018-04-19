@@ -68,6 +68,16 @@
             this._components.push( component );
         }
 
+        public getComponent( componentName: string ): IGameObjectComponent {
+            for ( let c in this._components ) {
+                if ( this._components[c].name == componentName ) {
+                    return this._components[c];
+                }
+            }
+
+            return undefined;
+        }
+
         public initialize( components: ComponentDictionary ): void {
             for ( let c in this._components ) {
                 this._components[c].initialize( components );

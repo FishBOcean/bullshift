@@ -77,7 +77,7 @@ module BullShift {
     /**
      * A component which handles spawning of a game object on a trigger.
      */
-    export class SpawnComponent extends BaseGameObjectComponent {
+    export class SpawnComponent extends BaseGameObjectComponent implements IMessageHandler {
 
         private _triggerMessage: string;
         private _objectName: string;

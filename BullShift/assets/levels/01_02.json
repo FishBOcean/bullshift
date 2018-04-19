@@ -3,48 +3,6 @@
   "scene": {
     "objects": [
       {
-        "name": "bg_0",
-        "x": 0,
-        "y": 0,
-        "components": [
-          "testBgSpriteComponent"
-        ]
-      },
-      {
-        "name": "bg_1",
-        "x": 32,
-        "y": 32,
-        "components": [
-          "testBgSpriteComponent"
-        ],
-        "children": [
-          {
-            "name": "bg_3",
-            "x": 96,
-            "y": 96,
-            "components": [
-              "testBgSpriteComponent"
-            ]
-          }
-        ]
-      },
-      {
-        "name": "bg_2",
-        "x": 64,
-        "y": 64,
-        "components": [
-          "testBgSpriteComponent"
-        ]
-      },
-      {
-        "name": "animatedTestObj",
-        "x": 128,
-        "y": 128,
-        "components": [
-          "animatedTestComponent"
-        ]
-      },
-      {
         "name": "tileMap",
         "x": 0,
         "y": 0,
@@ -54,12 +12,13 @@
       },
       {
         "name": "world",
-        "comment": "A world-level object that contains non-renderable components for scene management.",
+        "comment": "A world-level object that contains non-renderable components for scene management. Add components which should be preloaded here.",
+        "comment 2": "Any controllers should be attached here as well.",
         "x": 0,
         "y": 0,
         "visible": false,
         "components": [
-          "playerSpawn",
+          "mainController",
           "playerSpriteComponent"
         ]
       }
@@ -123,44 +82,12 @@
         ]
       }
     ],
-    "move": [
+    "sokobanController": [
       {
-        "name": "playerMoveComponent",
-        "messages": [
-          {
-            "name": "Player:moveLeft",
-            "axis": "x",
-            "amount": -32
-          },
-          {
-            "name": "Player:moveRight",
-            "axis": "x",
-            "amount": 32
-          },
-          {
-            "name": "Player:moveUp",
-            "axis": "y",
-            "amount": -32
-          },
-          {
-            "name": "Player:moveDown",
-            "axis": "y",
-            "amount": 32
-          }
-        ]
-      }
-    ],
-    "spawn": [
-      {
-        "name": "playerSpawn",
-        "triggerMessage": "LEVEL_READY",
-        "objectName": "player",
-        "spawnPositionX": 448,
-        "spawnPositionY": 160,
-        "components": [
-          "playerSpriteComponent",
-          "playerMoveComponent"
-        ]
+        "name": "mainController",
+        "tileMap": "tileMap",
+        "tileMapComponent": "mainTileMap",
+        "playerSprite": "playerSpriteComponent"
       }
     ],
     "tileMap": [
@@ -169,6 +96,8 @@
         "tileSet": "mainTileSet",
         "tilesWide": 20,
         "tilesHigh": 14,
+        "spawnTileX": 14,
+        "spawnTileY": 5,
         "layers": [
           {
             "tilesWide": 20,

@@ -68,6 +68,14 @@
         }
 
         /**
+         * Gets the tile by the given index.
+         * @param index The index of the tile to get.
+         */
+        public getTileByIndex( index: number ): TileComponent {
+            return this._tiles[index];
+        }
+
+        /**
          * Indicates whether or not this layer is preloading.
          */
         public preloading(): boolean {

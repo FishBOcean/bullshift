@@ -1,7 +1,7 @@
 ﻿
 module BullShift {
 
-    
+
     /**
      * Tile map component configuration.
      */
@@ -11,6 +11,8 @@ module BullShift {
         public tileSet: string;
         public tilesWide: number;
         public tilesHigh: number;
+        public spawnTileX: number;
+        public spawnTileY: number;
 
         public layers: TileMapLayerConfiguration[] = [];
 
@@ -38,6 +40,18 @@ module BullShift {
             }
             this.tilesHigh = jsonConfiguration.tilesHigh;
 
+            // Tile start index X
+            if ( jsonConfiguration.spawnTileX === undefined ) {
+                throw new Error( "Tile map components require spawnTileX to be set" );
+            }
+            this.spawnTileX = jsonConfiguration.spawnTileX;
+
+            // Tile start index Y
+            if ( jsonConfiguration.spawnTileY === undefined ) {
+                throw new Error( "Tile map components require spawnTileY to be set" );
+            }
+            this.spawnTileY = jsonConfiguration.spawnTileY;
+
             // Layers
             if ( jsonConfiguration.layers === undefined ) {
                 throw new Error( "Tile map components must have an array of layers!" );
@@ -58,6 +72,8 @@ module BullShift {
         private _tileSize: number;
         private _tilesWide: number;
         private _tilesHigh: number;
+        private _tileStartIndexX: number;
+        private _tileStartIndexY: number;
 
         private _tileSetName: string;
         private _tileSet: TileSetComponent;
@@ -68,6 +84,12 @@ module BullShift {
         public constructor( config: TileMapConfiguration ) {
             super( config );
 
+            this._tileStartIndexX = config.spawnTileX;
+            this._tileStartIndexY = config.spawnTileY;
+
+            this._tilesWide = config.tilesWide;
+            this._tilesHigh = config.tilesHigh;
+
             this._container = new PIXI.Container();
 
             this._tileSetName = config.tileSet;
@@ -75,6 +97,20 @@ module BullShift {
                 let layer = new TileMapLayer( config.layers[i] );
                 this._layers.push( layer );
             }
+        }
+
+        public get tileStartPosition(): Vector2 {
+            let vec = new Vector2;
+            vec.x = this.x + ( Game.TILE_SIZE * this._tileStartIndexX );
+            vec.y = this.y + ( Game.TILE_SIZE * this._tileStartIndexY );
+            return vec;
+        }
+
+        public get tileStartIndices(): Vector2 {
+            let vec = new Vector2;
+            vec.x = this._tileStartIndexX;
+            vec.y = this._tileStartIndexY;
+            return vec;
         }
 
         public get internalData(): PIXI.DisplayObject {
@@ -103,6 +139,21 @@ module BullShift {
 
         public get height(): number {
             return this._tileSize * this._tilesHigh;
+        }
+
+        /**
+         * Returns all tiles for all layers at the given tile index.
+         * @param x The x index.
+         * @param y The y index.
+         * @returns A collection of all tiles for all layers at the given tile index.
+         */
+        public getTilesAt( x: number, y: number ): TileComponent[] {
+            let index = ( y * this._tilesWide ) + x;
+            let tiles: TileComponent[] = [];
+            for ( let i in this._layers ) {
+                tiles.push( this._layers[i].getTileByIndex( index ) );
+            }
+            return tiles;
         }
 
         public preloading(): boolean {

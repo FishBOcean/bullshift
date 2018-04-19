@@ -22,6 +22,7 @@ module BullShift {
             this._factories.push( new AnimatedSpriteComponentFactory() );
             this._factories.push( new TileMapComponentFactory() );
             this._factories.push( new SpawnComponentFactory() );
+            this._factories.push( new SokobanControllerComponentFactory() );
         }
 
         /**

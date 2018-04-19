@@ -125,6 +125,10 @@ module BullShift {
             this._scene.addObject( object );
         }
 
+        public getObject( objectName: string ): GameObject {
+            return this._scene.getObject( objectName );
+        }
+
         private createObjects( configSection: any, parentObject: GameObject ): void {
             for ( let o in configSection ) {
                 let objConfig = configSection[o];

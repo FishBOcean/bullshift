@@ -21,4 +21,46 @@
             }
         }
     }
+
+    export class Vector2 {
+        public x: number = 0;
+        public y: number = 0;
+
+        public clone(): Vector2 {
+            let v = new Vector2();
+            v.x = this.x;
+            v.y = this.y;
+            return v;
+        }
+    }
+
+    export class Vector3 {
+        public x: number = 0;
+        public y: number = 0;
+        public z: number = 0;
+
+        public clone(): Vector3 {
+            let v = new Vector3();
+            v.x = this.x;
+            v.y = this.y;
+            v.z = this.z;
+            return v;
+        }
+    }
+
+    export class Vector4 {
+        public x: number = 0;
+        public y: number = 0;
+        public z: number = 0;
+        public w: number = 0;
+
+        public clone(): Vector4 {
+            let v = new Vector4();
+            v.x = this.x;
+            v.y = this.y;
+            v.z = this.z;
+            v.w = this.w;
+            return v;
+        }
+    }
 }

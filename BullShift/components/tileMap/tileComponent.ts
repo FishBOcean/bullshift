@@ -148,6 +148,13 @@
         }
 
         /**
+         * Gets the tile type of this tile.
+         */
+        public get tileType(): TileType {
+            return this._tileType;
+        }
+
+        /**
          * Indicates if this component is preloading.
          */
         public preloading(): boolean {

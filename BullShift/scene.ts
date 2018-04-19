@@ -35,6 +35,10 @@ module BullShift {
             obj.onSceneAdd( this );
         }
 
+        public getObject( objectName: string ): GameObject {
+            return this._gameObjects[objectName];
+        }
+
         public activate(): void {
             this._isActive = true;
             this._worldContainer.addChild( this._container );

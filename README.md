@@ -22,3 +22,4 @@ For now, I'll be keeping progress in a log format here. Eventually I will write 
 14. Added ability to unsubscribe to messages. Also added spawn component (which listens for messages).
 15. Tweaked/added assets. Updated tile map. Decided on cutting pickup items/powerups feature. Can add after project completion.
 16. Multi-level loading working. Fixed bugs with object and component destruction. Tied a temporary UI control to switch levels.
+17. Tweened player movement added. Sokoban Controller component added, which tracks game state. TileMap checks added for bounds.

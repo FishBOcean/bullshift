@@ -54,12 +54,13 @@
       },
       {
         "name": "world",
-        "comment": "A world-level object that contains non-renderable components for scene management.",
+        "comment": "A world-level object that contains non-renderable components for scene management. Add components which should be preloaded here.",
+        "comment 2": "Any controllers should be attached here as well.",
         "x": 0,
         "y": 0,
         "visible": false,
         "components": [
-          "playerSpawn",
+          "mainController",
           "playerSpriteComponent"
         ]
       }
@@ -123,50 +124,20 @@
         ]
       }
     ],
-    "move": [
+    "sokobanController": [
       {
-        "name": "playerMoveComponent",
-        "messages": [
-          {
-            "name": "Player:moveLeft",
-            "axis": "x",
-            "amount": -32
-          },
-          {
-            "name": "Player:moveRight",
-            "axis": "x",
-            "amount": 32
-          },
-          {
-            "name": "Player:moveUp",
-            "axis": "y",
-            "amount": -32
-          },
-          {
-            "name": "Player:moveDown",
-            "axis": "y",
-            "amount": 32
-          }
-        ]
-      }
-    ],
-    "spawn": [
-      {
-        "name": "playerSpawn",
-        "triggerMessage": "LEVEL_READY",
-        "objectName": "player",
-        "spawnPositionX": 320,
-        "spawnPositionY": 192,
-        "components": [
-          "playerSpriteComponent",
-          "playerMoveComponent"
-        ]
+        "name": "mainController",
+        "tileMap": "tileMap",
+        "tileMapComponent": "mainTileMap",
+        "playerSprite": "playerSpriteComponent"
       }
     ],
     "tileMap": [
       {
         "name": "mainTileMap",
         "tileSet": "mainTileSet",
+        "spawnTileX": 10,
+        "spawnTileY": 6,
         "tilesWide": 20,
         "tilesHigh": 14,
         "layers": [
@@ -239,22 +210,22 @@
       },
       {
         "name": "crateTile",
-        "type": "background",
+        "type": "movable",
         "spriteComponent": "crateSpriteComponent"
       },
       {
         "name": "fenceForward",
-        "type": "background",
+        "type": "wall",
         "spriteComponent": "fenceForwardSpriteComponent"
       },
       {
         "name": "fenceLeft",
-        "type": "background",
+        "type": "wall",
         "spriteComponent": "fenceLeftSpriteComponent"
       },
       {
         "name": "fenceRight",
-        "type": "background",
+        "type": "wall",
         "spriteComponent": "fenceRightSpriteComponent"
       }
     ]

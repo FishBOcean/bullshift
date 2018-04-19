@@ -1,5 +1,9 @@
 ﻿module BullShift {
 
+    export enum SystemMessageName {
+        LEVEL_READY = "LEVEL_READY"
+    }
+
     /**
      * Represents an object which will handle incoming messages. This must be implemented in order to utilize messages.
      */
