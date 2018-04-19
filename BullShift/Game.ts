@@ -13,15 +13,20 @@ module BullShift {
         PAUSED
     }
 
+    enum FadeDirection {
+        IN,
+        OUT
+    }
+
     export class Game implements IMessageHandler {
-        
+
         private _application: PIXI.Application;
         private _gameScreens: { [key: string]: GameScreen } = {};
         private _activeGameScreen: GameScreen = undefined;
         private _activeLevel: Level;
         private _state = GameState.LEVEL_PRELOADING;
         private _uiLoaded: boolean = false;
-        private _levels: { [name: string]: Level } = {};
+        private _levels: Level[] = [];
         private _unloadLevel: boolean = false;
         private _loadLevelName: string;
 
@@ -29,11 +34,17 @@ module BullShift {
         private _uiRoot: PIXI.Container;
         private _overlayRoot: PIXI.Container;
         private _fadeContainer: PIXI.Container;
+        private _isFading: boolean = false;
+        private _fadeDirection: FadeDirection = FadeDirection.IN;
+        private _fadeModAmount = 0.01;
+        private _levelCleared: boolean = false;
+        private _levelIndex: number = 0;
 
         public static readonly TILE_SIZE: number = 32;
 
         public constructor() {
-            Message.subscribe( "CHANGE_LEVEL", this );
+            //Message.subscribe( "CHANGE_LEVEL", this );
+            Message.subscribe( "LEVEL_CLEARED", this );
         }
 
         public static get screenWidth(): number {
@@ -50,7 +61,7 @@ module BullShift {
                 this._activeLevel.unload();
                 this._state = GameState.LEVEL_PRELOADING;
 
-                this.setActiveLevel( this._loadLevelName );
+                this.setActiveLevel( this._levelIndex );
                 this._loadLevelName = "";
                 this._unloadLevel = false;
                 return;
@@ -76,9 +87,38 @@ module BullShift {
                 }
             }
 
-            
+            if ( this._isFading ) {
+                if ( this._fadeDirection === FadeDirection.IN ) {
+                    this._fadeContainer.alpha += this._fadeModAmount;
+                    if ( this._fadeContainer.alpha >= 1 ) {
+                        this._fadeContainer.alpha = 1;
+                        this._isFading = false;
+                    }
+                } else {
+                    this._fadeContainer.alpha -= this._fadeModAmount;
+                    if ( this._fadeContainer.alpha <= 0 ) {
+                        this._fadeContainer.alpha = 0;
+                        this._isFading = false;
 
-            // TODO: check for signals of a level change.
+                        // If this is set, its because the fade was triggered by a level change.
+                        if ( this._levelCleared === true ) {
+                            this._unloadLevel = true;
+                            this._levelCleared = false;
+
+                            // Get next level 
+                            this._levelIndex++;
+                            if ( this._levelIndex >= this._levels.length ) {
+
+                                // TODO: start over for now.
+                                this._levelIndex = 0;
+                            }
+
+                            // Trigger unload.
+                            this._unloadLevel = true;
+                        }
+                    }
+                }
+            }
         }
 
         public start(): void {
@@ -108,10 +148,10 @@ module BullShift {
 
             this._application.stage.addChild( this._overlayRoot );
 
-            this._levels["01:01"] = new Level( this._worldRoot, "01:01", "assets/levels/01_01.json" );
-            this._levels["01:02"] = new Level( this._worldRoot, "01:02", "assets/levels/01_02.json" );
+            this._levels.push( new Level( this._worldRoot, "01:01", "assets/levels/01_01.json" ) );
+            this._levels.push( new Level( this._worldRoot, "01:02", "assets/levels/01_02.json" ) );
 
-            this.setActiveLevel( "01:01" );
+            this.setActiveLevel( this._levelIndex );
 
             this.initializeUI();
 
@@ -126,16 +166,22 @@ module BullShift {
 
         public onMessage( message: Message ): void {
             switch ( message.name ) {
-                case "CHANGE_LEVEL":
-                    this._unloadLevel = true;
-                    this._loadLevelName = message.context as string;
+                case "LEVEL_CLEARED":
+                    this._isFading = true;
+                    this._fadeDirection = FadeDirection.OUT;
+                    this._levelCleared = true;
                     break;
+                //case "CHANGE_LEVEL":
+                //    this._unloadLevel = true;
+                //    this._loadLevelName = message.context as string;
+                //    break;
                 case "FADE_OUT":
-
-                    //this._fadeContainer.alpha = 0;
+                    this._isFading = true;
+                    this._fadeDirection = FadeDirection.OUT;
                     break;
                 case "FADE_IN":
-
+                    this._isFading = true;
+                    this._fadeDirection = FadeDirection.IN;
                     break;
                 default:
                     break;
@@ -176,14 +222,14 @@ module BullShift {
             }
         }
 
-        private setActiveLevel( levelName: string ): void {
+        private setActiveLevel( levelIndex: number ): void {
             if ( this._activeLevel ) {
                 this._activeLevel.deactivate();
                 this._activeLevel.unload();
                 this._activeLevel.destroy();
             }
 
-            this._activeLevel = this._levels[levelName];
+            this._activeLevel = this._levels[levelIndex];
             //this._activeLevel.scene.activate();
         }
 
