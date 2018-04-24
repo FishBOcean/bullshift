@@ -2,7 +2,7 @@
 
 module BullShift {
 
-    export class PlayScreen extends GameScreen {
+    export class PlayScreen extends GameScreen implements IMessageHandler {
 
         private _upCtrl: GameObject;
         private _downCtrl: GameObject;
@@ -34,7 +34,21 @@ module BullShift {
                 Game.TILE_SIZE * 3,
                 Game.screenHeight - ( Game.TILE_SIZE * 3 ) );
 
+            this.addTextControl( "movesTextCtrl", 400, Game.screenHeight - 20, "Moves:0" );
+
+            Message.subscribe( "PLAYER_MOVED", this );
+            Message.subscribe( "PlayScreen:Reset", this );
+
             super.initialize();
+        }
+
+        public onMessage( message: Message ): void {
+            if ( message.name === "PLAYER_MOVED" ) {
+                Message.createAndSend( "SetText:movesTextCtrl", this, "Moves:" + message.context as string );
+            }
+            if ( message.name === "PlayScreen:Reset" ) {
+                Message.createAndSend( "SetText:movesTextCtrl", this, "Moves:0" );
+            }
         }
 
         private leftPressed(): void {

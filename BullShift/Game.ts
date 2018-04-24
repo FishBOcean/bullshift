@@ -45,6 +45,8 @@ module BullShift {
         public constructor() {
             //Message.subscribe( "CHANGE_LEVEL", this );
             Message.subscribe( "LEVEL_CLEARED", this );
+            Message.subscribe( "FADE_IN", this );
+            Message.subscribe( "FADE_OUT", this );
         }
 
         public static get screenWidth(): number {
@@ -89,15 +91,19 @@ module BullShift {
 
             if ( this._isFading ) {
                 if ( this._fadeDirection === FadeDirection.IN ) {
-                    this._fadeContainer.alpha += this._fadeModAmount;
-                    if ( this._fadeContainer.alpha >= 1 ) {
-                        this._fadeContainer.alpha = 1;
+                    this._fadeContainer.alpha -= this._fadeModAmount;
+                    console.log( this._fadeContainer.alpha );
+                    if ( this._fadeContainer.alpha <= 0 ) {
+                        console.log( "fade in complete" );
+                        this._fadeContainer.alpha = 0;
                         this._isFading = false;
                     }
                 } else {
-                    this._fadeContainer.alpha -= this._fadeModAmount;
-                    if ( this._fadeContainer.alpha <= 0 ) {
-                        this._fadeContainer.alpha = 0;
+                    this._fadeContainer.alpha += this._fadeModAmount;
+                    console.log( this._fadeContainer.alpha );
+                    if ( this._fadeContainer.alpha >= 1 ) {
+                        console.log( "fade out complete" );
+                        this._fadeContainer.alpha = 1;
                         this._isFading = false;
 
                         // If this is set, its because the fade was triggered by a level change.
@@ -115,6 +121,9 @@ module BullShift {
 
                             // Trigger unload.
                             this._unloadLevel = true;
+
+                            // Reset play screen.
+                            Message.createAndSend( "PlayScreen:Reset", this );
                         }
                     }
                 }
@@ -209,6 +218,7 @@ module BullShift {
                     console.log( "Load complete. Starting gameplay..." );
                     this._state = GameState.PLAYING;
                     Message.createAndSend( "LEVEL_READY", this );
+                    Message.createAndSend( "FADE_IN", this );
                 } else {
                     console.log( "Level loading..." );
                 }

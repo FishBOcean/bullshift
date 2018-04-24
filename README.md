@@ -25,3 +25,4 @@ For now, I'll be keeping progress in a log format here. Eventually I will write 
 17. Tweened player movement added. Sokoban Controller component added, which tracks game state. TileMap checks added for bounds.
 18. Added crates. Player is now able to push them about and they collide correctly with walls and other crates.
 19. Goals working. Began adding screen fade logic.
+20. Added keyboard input handler. Fixed screen fades. TextComponent added. Move counter added top play screen.

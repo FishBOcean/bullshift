@@ -1,5 +1,5 @@
 ﻿module BullShift {
-    
+
     export class CrateConfig {
         public x: number;
         public y: number;
@@ -108,6 +108,7 @@
         private _goals: Goal[] = [];
 
         private _cleared: boolean = false;
+        private _moves: number = 0;
 
         /**
          * The name of this controller.
@@ -147,6 +148,16 @@
             Message.subscribe( "Player:moveRight", this );
             Message.subscribe( "Player:moveUp", this );
             Message.subscribe( "Player:moveDown", this );
+
+            Message.subscribe( "Key:" + KeyCode[KeyCode.W].toString(), this );
+            Message.subscribe( "Key:" + KeyCode[KeyCode.A].toString(), this );
+            Message.subscribe( "Key:" + KeyCode[KeyCode.S].toString(), this );
+            Message.subscribe( "Key:" + KeyCode[KeyCode.D].toString(), this );
+            Message.subscribe( "Key:" + KeyCode[KeyCode.UP].toString(), this );
+            Message.subscribe( "Key:" + KeyCode[KeyCode.LEFT].toString(), this );
+            Message.subscribe( "Key:" + KeyCode[KeyCode.DOWN].toString(), this );
+            Message.subscribe( "Key:" + KeyCode[KeyCode.RIGHT].toString(), this );
+
         }
 
         public preloading(): boolean {
@@ -164,6 +175,14 @@
             Message.unsubscribe( "Player:moveRight", this );
             Message.unsubscribe( "Player:moveUp", this );
             Message.unsubscribe( "Player:moveDown", this );
+            Message.unsubscribe( "Key:" + KeyCode[KeyCode.W].toString(), this );
+            Message.unsubscribe( "Key:" + KeyCode[KeyCode.A].toString(), this );
+            Message.unsubscribe( "Key:" + KeyCode[KeyCode.S].toString(), this );
+            Message.unsubscribe( "Key:" + KeyCode[KeyCode.D].toString(), this );
+            Message.unsubscribe( "Key:" + KeyCode[KeyCode.UP].toString(), this );
+            Message.unsubscribe( "Key:" + KeyCode[KeyCode.LEFT].toString(), this );
+            Message.unsubscribe( "Key:" + KeyCode[KeyCode.DOWN].toString(), this );
+            Message.unsubscribe( "Key:" + KeyCode[KeyCode.RIGHT].toString(), this );
         }
 
         public destroy(): void {
@@ -225,6 +244,35 @@
             if ( message.name === SystemMessageName.LEVEL_READY ) {
                 this.spawnComponents();
             } else {
+
+                // Note: This is a kinda crappy way to handle this, but the most straightforward for now given the time left.
+                // TODO: Refactor this into keybindings later.
+                switch ( message.name ) {
+                    case "Key:" + KeyCode[KeyCode.A].toString():
+                    case "Key:" + KeyCode[KeyCode.LEFT].toString():
+                        if ( ( message.context as Key ).isDown ) {
+                            Message.createAndSend( "Player:moveLeft", this );
+                        }
+                        return;
+                    case "Key:" + KeyCode[KeyCode.D].toString():
+                    case "Key:" + KeyCode[KeyCode.RIGHT].toString():
+                        if ( ( message.context as Key ).isDown ) {
+                            Message.createAndSend( "Player:moveRight", this );
+                        }
+                        return;
+                    case "Key:" + KeyCode[KeyCode.W].toString():
+                    case "Key:" + KeyCode[KeyCode.UP].toString():
+                        if ( ( message.context as Key ).isDown ) {
+                            Message.createAndSend( "Player:moveUp", this );
+                        }
+                        return;
+                    case "Key:" + KeyCode[KeyCode.S].toString():
+                    case "Key:" + KeyCode[KeyCode.DOWN].toString():
+                        if ( ( message.context as Key ).isDown ) {
+                            Message.createAndSend( "Player:moveDown", this );
+                        }
+                        return;
+                }
 
                 // Only move if we are not currently moving.
                 if ( this._moveDirection === PlayerMoveDirection.NONE ) {
@@ -295,7 +343,7 @@
             for ( let c in this._crates ) {
                 let crate = this._crates[c];
                 if ( crate.tileIndices.equals( intendedCoords ) ) {
-                    
+
                     // Check the crates first
                     for ( let c2 in this._crates ) {
                         if ( this._crates[c2].tileIndices.equals( intendedCoords2Out ) ) {
@@ -316,6 +364,7 @@
                     // If we get here, all tests passed. Move the crate along with the player.
                     crate.moveToTilePosition( intendedCoords2Out.x, intendedCoords2Out.y );
 
+
                     // TODO: The tile then should check if it is over a goal space. If so, it should notify this controller
                     // that a required tile has been placed on a goal.
                     crate.isOnGoal = false;
@@ -326,15 +375,19 @@
                             break;
                         }
                     }
-                    
+
                 }
             }
-            
+
+            // If we get here, a move of some kind occurred. Send a message about this.
+            this._moves++;
+            Message.createAndSend( "PLAYER_MOVED", this, this._moves );
+
             return true;
         }
 
         private spawnComponents(): void {
-            
+
             let config = this._config as SokobanControllerComponentConfig;
 
             // Save off a reference to the tile map.

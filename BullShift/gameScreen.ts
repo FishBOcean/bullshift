@@ -45,7 +45,17 @@
 
         public addButton( name: string, assetPath: string, callback: Function, x: number, y: number ): GameObject {
             let obj = new GameObject( name );
-            obj.addComponent( new UIButtonComponent( name = "_component", assetPath, callback ) );
+            obj.addComponent( new UIButtonComponent( name, assetPath, callback ) );
+            obj.x = x;
+            obj.y = y;
+            this._scene.addObject( obj );
+            return obj;
+        }
+
+        public addTextControl( name: string, x: number, y: number, text: string = "" ) {
+            let obj = new GameObject( name );
+            let cmp = new TextComponent( TextComponentConfiguration.create( name, text ) );
+            obj.addComponent( cmp );
             obj.x = x;
             obj.y = y;
             this._scene.addObject( obj );

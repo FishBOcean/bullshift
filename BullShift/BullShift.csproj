@@ -129,6 +129,8 @@
     <TypeScriptCompile Include="components\spawn\spawnComponentFactory.ts" />
     <TypeScriptCompile Include="components\sprite\SpriteComponent.ts" />
     <TypeScriptCompile Include="components\sprite\SpriteComponentFactory.ts" />
+    <TypeScriptCompile Include="components\text\textComponent.ts" />
+    <TypeScriptCompile Include="components\text\textComponentFactory.ts" />
     <TypeScriptCompile Include="components\tileMap\tileComponent.ts" />
     <TypeScriptCompile Include="components\tileMap\tileMapComponent.ts" />
     <TypeScriptCompile Include="components\tileMap\tileMapFactory.ts" />
@@ -139,6 +141,7 @@
     <TypeScriptCompile Include="GameObject.ts" />
     <TypeScriptCompile Include="gameScreen.ts" />
     <TypeScriptCompile Include="components\IGameObjectComponent.ts" />
+    <TypeScriptCompile Include="keyboardHandler.ts" />
     <TypeScriptCompile Include="Level.ts" />
     <TypeScriptCompile Include="lib\pixi.d.ts" />
     <TypeScriptCompile Include="math.ts" />
