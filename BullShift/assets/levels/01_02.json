@@ -1,5 +1,5 @@
 ﻿{
-  "name": "Level 1-2",
+  "name": "1-2",
   "scene": {
     "objects": [
       {
@@ -45,7 +45,7 @@
       },
       {
         "name": "crateSpriteComponent",
-        "asset": "assets/crate.png"
+        "asset": "assets/bull.png"
       },
       {
         "name": "fenceForwardSpriteComponent",

@@ -26,3 +26,5 @@ For now, I'll be keeping progress in a log format here. Eventually I will write 
 18. Added crates. Player is now able to push them about and they collide correctly with walls and other crates.
 19. Goals working. Began adding screen fade logic.
 20. Added keyboard input handler. Fixed screen fades. TextComponent added. Move counter added top play screen.
+21. Added UI elements to play screen. Added summary screen. Tweaked previous UI controls.
+22. Added audio, including music and effects. Added UI controls to mute SFX or music independently.

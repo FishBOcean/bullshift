@@ -110,6 +110,13 @@
         private _cleared: boolean = false;
         private _moves: number = 0;
 
+        private _musicEnabled: boolean = true;
+        private _music: HTMLAudioElement;
+
+        private _soundEnabled: boolean = true;
+        private _step: HTMLAudioElement;
+        private _cow: HTMLAudioElement;
+
         /**
          * The name of this controller.
          */
@@ -158,6 +165,11 @@
             Message.subscribe( "Key:" + KeyCode[KeyCode.DOWN].toString(), this );
             Message.subscribe( "Key:" + KeyCode[KeyCode.RIGHT].toString(), this );
 
+
+            Message.subscribe( "MUSIC_DISABLE", this );
+            Message.subscribe( "MUSIC_ENABLE", this );
+            Message.subscribe( "SOUND_DISABLE", this );
+            Message.subscribe( "SOUND_ENABLE", this );
         }
 
         public preloading(): boolean {
@@ -183,6 +195,15 @@
             Message.unsubscribe( "Key:" + KeyCode[KeyCode.LEFT].toString(), this );
             Message.unsubscribe( "Key:" + KeyCode[KeyCode.DOWN].toString(), this );
             Message.unsubscribe( "Key:" + KeyCode[KeyCode.RIGHT].toString(), this );
+            if ( this._music !== undefined && !this._music.paused ) {
+                this._music.pause();
+                this._music = undefined;
+            }
+
+            Message.unsubscribe( "MUSIC_DISABLE", this );
+            Message.unsubscribe( "MUSIC_ENABLE", this );
+            Message.unsubscribe( "SOUND_DISABLE", this );
+            Message.unsubscribe( "SOUND_ENABLE", this );
         }
 
         public destroy(): void {
@@ -243,11 +264,60 @@
 
             if ( message.name === SystemMessageName.LEVEL_READY ) {
                 this.spawnComponents();
+
+                // Load audio
+                this._music = document.createElement( "audio" );
+                if ( this._music.canPlayType( "audio/mpeg" ) ) {
+                    this._music.setAttribute( "src", "assets/Tambul.mp3" );
+                } else {
+                    this._music.setAttribute( "src", "assets/Tambul.ogg" );
+                }
+                this._music.loop = true;
+                
+                if ( this._musicEnabled === true ) {
+                    this._music.play();
+                }
+
+                // Step
+                this._step = document.createElement( "audio" );
+                this._step.autoplay = false;
+                if ( this._step.canPlayType( "audio/mpeg" ) ) {
+                    this._step.setAttribute( "src", "assets/step.mp3" );
+                } else {
+                    this._step.setAttribute( "src", "assets/step.ogg" );
+                }
+
+                // Cow
+                this._cow = document.createElement( "audio" );
+                this._cow.autoplay = false;
+                if ( this._cow.canPlayType( "audio/mpeg" ) ) {
+                    this._cow.setAttribute( "src", "assets/cow.mp3" );
+                } else {
+                    this._cow.setAttribute( "src", "assets/cow.ogg" );
+                }
             } else {
 
                 // Note: This is a kinda crappy way to handle this, but the most straightforward for now given the time left.
                 // TODO: Refactor this into keybindings later.
                 switch ( message.name ) {
+                    case "MUSIC_DISABLE":
+                        if ( this._music !== undefined ) {
+                            this._music.pause();
+                        }
+                        this._musicEnabled = false;
+                        break;
+                    case "MUSIC_ENABLE":
+                        if ( this._music !== undefined ) {
+                            this._music.play();
+                        }
+                        this._musicEnabled = true;
+                        break;
+                    case "SOUND_DISABLE":
+                        this._soundEnabled = false;
+                        break;
+                    case "SOUND_ENABLE":
+                        this._soundEnabled = true;
+                        break;
                     case "Key:" + KeyCode[KeyCode.A].toString():
                     case "Key:" + KeyCode[KeyCode.LEFT].toString():
                         if ( ( message.context as Key ).isDown ) {
@@ -371,6 +441,10 @@
                     for ( let g in this._goals ) {
                         if ( crate.tileIndices.equals( this._goals[g].tileIndices ) ) {
                             crate.isOnGoal = true;
+                            if ( this._soundEnabled ) {
+                                this._cow.currentTime = 0;
+                                this._cow.play();
+                            }
                             this.verifyGoalRequirements();
                             break;
                         }
@@ -382,6 +456,12 @@
             // If we get here, a move of some kind occurred. Send a message about this.
             this._moves++;
             Message.createAndSend( "PLAYER_MOVED", this, this._moves );
+
+            // Play movement sound
+            if ( this._soundEnabled ) {
+                this._step.currentTime = 0;
+                this._step.play();
+            }
 
             return true;
         }

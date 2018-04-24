@@ -67,6 +67,8 @@ module BullShift {
         public initialize(): void {
             this._components = ComponentManager.getComponentsFromConfiguration( this._configuration );
 
+            this.name = this._configuration.name as string;
+
             if ( this._configuration.scene && this._configuration.scene.objects ) {
                 let configSection = this._configuration.scene.objects;
                 this.createObjects( configSection, undefined );

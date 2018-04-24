@@ -44,7 +44,7 @@ module BullShift {
 
         public constructor() {
             //Message.subscribe( "CHANGE_LEVEL", this );
-            Message.subscribe( "LEVEL_CLEARED", this );
+            Message.subscribe( "SUMMARY_CONTINUE", this );
             Message.subscribe( "FADE_IN", this );
             Message.subscribe( "FADE_OUT", this );
         }
@@ -87,22 +87,20 @@ module BullShift {
                     this._uiLoaded = true;
                     console.log( "All gameScreens are loaded." );
                 }
+            } else {
+                this._activeGameScreen.update( dt );
             }
 
             if ( this._isFading ) {
                 if ( this._fadeDirection === FadeDirection.IN ) {
                     this._fadeContainer.alpha -= this._fadeModAmount;
-                    console.log( this._fadeContainer.alpha );
                     if ( this._fadeContainer.alpha <= 0 ) {
-                        console.log( "fade in complete" );
                         this._fadeContainer.alpha = 0;
                         this._isFading = false;
                     }
                 } else {
                     this._fadeContainer.alpha += this._fadeModAmount;
-                    console.log( this._fadeContainer.alpha );
                     if ( this._fadeContainer.alpha >= 1 ) {
-                        console.log( "fade out complete" );
                         this._fadeContainer.alpha = 1;
                         this._isFading = false;
 
@@ -157,8 +155,8 @@ module BullShift {
 
             this._application.stage.addChild( this._overlayRoot );
 
-            this._levels.push( new Level( this._worldRoot, "01:01", "assets/levels/01_01.json" ) );
-            this._levels.push( new Level( this._worldRoot, "01:02", "assets/levels/01_02.json" ) );
+            this._levels.push( new Level( this._worldRoot, "1-1", "assets/levels/01_01.json" ) );
+            this._levels.push( new Level( this._worldRoot, "1-2", "assets/levels/01_02.json" ) );
 
             this.setActiveLevel( this._levelIndex );
 
@@ -175,15 +173,11 @@ module BullShift {
 
         public onMessage( message: Message ): void {
             switch ( message.name ) {
-                case "LEVEL_CLEARED":
+                case "SUMMARY_CONTINUE":
                     this._isFading = true;
                     this._fadeDirection = FadeDirection.OUT;
                     this._levelCleared = true;
                     break;
-                //case "CHANGE_LEVEL":
-                //    this._unloadLevel = true;
-                //    this._loadLevelName = message.context as string;
-                //    break;
                 case "FADE_OUT":
                     this._isFading = true;
                     this._fadeDirection = FadeDirection.OUT;
@@ -217,17 +211,19 @@ module BullShift {
 
                     console.log( "Load complete. Starting gameplay..." );
                     this._state = GameState.PLAYING;
-                    Message.createAndSend( "LEVEL_READY", this );
+
+                    if ( !this._activeLevel.isActive ) {
+                        console.log( "Level not active - activating..." );
+                        this._activeLevel.activate();
+                    }
+                    Message.createAndSend( "LEVEL_READY", this, this._activeLevel.name );
                     Message.createAndSend( "FADE_IN", this );
                 } else {
                     console.log( "Level loading..." );
                 }
             } else if ( this._state === GameState.PLAYING ) {
                 //console.log( "playing..." );
-                if ( !this._activeLevel.isActive ) {
-                    console.log( "Level not active - activating..." );
-                    this._activeLevel.activate();
-                }
+
                 this._activeLevel.update( dt );
             }
         }
@@ -256,12 +252,7 @@ module BullShift {
             // Create and load all screens.
             this._gameScreens[GameScreenName.PLAY_SCREEN] = new BullShift.PlayScreen( this._uiRoot );
             this._gameScreens[GameScreenName.PLAY_SCREEN].initialize();
-
-
-
             this.setActiveGameScreen( GameScreenName.PLAY_SCREEN );
-
         }
-
     }
 }

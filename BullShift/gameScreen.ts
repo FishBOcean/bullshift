@@ -33,6 +33,9 @@
             this._scene.unload();
         }
 
+        public update( dt: number ): void {
+        }
+
         public activate(): void {
             this._isActive = true;
             this._scene.activate();

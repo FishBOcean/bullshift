@@ -120,11 +120,9 @@
          * @param handler The handler for the subscription.
          */
         public static addSubscriber( name: string, handler: IMessageHandler ): void {
-            console.log( "Adding subscription for: " + name );
-            if ( !MessageBus._inst._subscriptions[name] ) {
+            if ( MessageBus._inst._subscriptions[name] === undefined ) {
                 MessageBus._inst._subscriptions[name] = [];
             }
-
             MessageBus._inst._subscriptions[name].push( handler );
         }
 
@@ -134,14 +132,14 @@
          * @param handler The handler to unsubscribe.
          */
         public static removeSubscriber( name: string, handler: IMessageHandler ): void {
-            console.log( "Removing subscription for: " + name );
-            if ( !MessageBus._inst._subscriptions[name] ) {
+            if ( MessageBus._inst._subscriptions[name] === undefined ) {
                 console.warn( "Subscription does not exist:" + name );
             }
 
             let index = MessageBus._inst._subscriptions[name].indexOf( handler );
-
-            MessageBus._inst._subscriptions[name].splice( index, 1 );
+            if ( index !== -1 ) {
+                MessageBus._inst._subscriptions[name].splice( index, 1 );
+            }
         }
 
         /**

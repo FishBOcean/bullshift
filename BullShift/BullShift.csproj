@@ -81,9 +81,14 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\bull.png" />
     <Content Include="assets\crate.png" />
+    <Content Include="assets\levelCleared.png" />
     <Content Include="assets\levels\01_01.json" />
     <Content Include="assets\levels\01_02.json" />
+    <Content Include="assets\music_disabled.png" />
+    <Content Include="assets\music_enabled.png" />
+    <Content Include="assets\Tambul.ogg" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -101,6 +106,8 @@
     <Content Include="assets\ctrl_up.png" />
     <Content Include="assets\movable.png" />
     <Content Include="assets\player.png" />
+    <Content Include="assets\Tambul.mp3" />
+    <Content Include="assets\uibar.png" />
     <Content Include="index.html" />
     <Content Include="lib\pixi.js" />
     <Content Include="main.css" />
