@@ -3,7 +3,8 @@
 module BullShift {
 
     enum GameScreenName {
-        PLAY_SCREEN = "playScreen"
+        PLAY_SCREEN = "playScreen",
+        MAIN_MENU = "mainMenu"
     }
 
     enum GameState {
@@ -21,6 +22,7 @@ module BullShift {
     export class Game implements IMessageHandler {
 
         private _application: PIXI.Application;
+        private _renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer;
         private _gameScreens: { [key: string]: GameScreen } = {};
         private _activeGameScreen: GameScreen = undefined;
         private _activeLevel: Level;
@@ -39,14 +41,21 @@ module BullShift {
         private _fadeModAmount = 0.01;
         private _levelCleared: boolean = false;
         private _levelIndex: number = 0;
+        private _nextLevelIndex: number = 0;
+        private _setLevelFlag: boolean = false;
+        private _isStartingGame: boolean = false;
+        private _isQuittingGame: boolean = false;
 
         public static readonly TILE_SIZE: number = 32;
 
         public constructor() {
-            //Message.subscribe( "CHANGE_LEVEL", this );
+            Message.subscribe( "CHANGE_LEVEL", this );
+            Message.subscribe( "RESTART_LEVEL", this );
             Message.subscribe( "SUMMARY_CONTINUE", this );
             Message.subscribe( "FADE_IN", this );
             Message.subscribe( "FADE_OUT", this );
+            Message.subscribe( "START_GAME", this );
+            Message.subscribe( "GO_MAIN_MENU", this );
         }
 
         public static get screenWidth(): number {
@@ -109,16 +118,34 @@ module BullShift {
                             this._unloadLevel = true;
                             this._levelCleared = false;
 
-                            // Get next level 
-                            this._levelIndex++;
-                            if ( this._levelIndex >= this._levels.length ) {
+                            if ( this._setLevelFlag === true ) {
+                                this._levelIndex = this._nextLevelIndex;
+                                this._setLevelFlag = false;
+                                this._nextLevelIndex = 0;
+                            } else {
 
-                                // TODO: start over for now.
-                                this._levelIndex = 0;
+                                // Get next level 
+                                this._levelIndex++;
+                                if ( this._levelIndex >= this._levels.length ) {
+
+                                    // TODO: start over for now. May want to show a cinematic or something
+                                    // in the future.
+                                    this._levelIndex = 0;
+                                }
                             }
 
                             // Trigger unload.
                             this._unloadLevel = true;
+
+                            if ( this._isStartingGame ) {
+                                this._isStartingGame = false;
+                                this.setActiveGameScreen( GameScreenName.PLAY_SCREEN );
+                            }
+
+                            if ( this._isQuittingGame ) {
+                                this._isQuittingGame = false;
+                                this.setActiveGameScreen( GameScreenName.MAIN_MENU );
+                            }
 
                             // Reset play screen.
                             Message.createAndSend( "PlayScreen:Reset", this );
@@ -133,8 +160,17 @@ module BullShift {
             console.info( "start" );
 
             // TODO: fit to screen with given aspect ratio.
-            this._application = new PIXI.Application( 640, 480, { backgroundColor: 0x000000 } );
-            document.getElementById( 'content' ).appendChild( this._application.view );
+            this._application = new PIXI.Application( 640, 480, {
+                backgroundColor: 0x000000,
+                roundPixels: true,
+                resolution: window.devicePixelRatio || 1
+            } );
+            document.body.appendChild( this._application.view );
+
+            window.addEventListener( 'resize', this.resizeHandler.bind( this ), false );
+
+            this._renderer = this._application.renderer;
+            this._renderer.view.id = "viewport";
 
             BullShift.AssetManager.initialize( this._application );
 
@@ -157,26 +193,71 @@ module BullShift {
 
             this._levels.push( new Level( this._worldRoot, "1-1", "assets/levels/01_01.json" ) );
             this._levels.push( new Level( this._worldRoot, "1-2", "assets/levels/01_02.json" ) );
+            this._levels.push( new Level( this._worldRoot, "1-3", "assets/levels/01_03.json" ) );
+            this._levels.push( new Level( this._worldRoot, "1-4", "assets/levels/01_04.json" ) );
+            this._levels.push( new Level( this._worldRoot, "1-5", "assets/levels/01_05.json" ) );
+
+            this._levels.push( new Level( this._worldRoot, "2-1", "assets/levels/02_01.json" ) );
+            this._levels.push( new Level( this._worldRoot, "2-2", "assets/levels/02_02.json" ) );
+            this._levels.push( new Level( this._worldRoot, "2-3", "assets/levels/02_03.json" ) );
+            this._levels.push( new Level( this._worldRoot, "2-4", "assets/levels/02_04.json" ) );
+            this._levels.push( new Level( this._worldRoot, "2-5", "assets/levels/02_05.json" ) );
+
+            this._levels.push( new Level( this._worldRoot, "3-1", "assets/levels/03_01.json" ) );
+            this._levels.push( new Level( this._worldRoot, "3-2", "assets/levels/03_02.json" ) );
+            this._levels.push( new Level( this._worldRoot, "3-3", "assets/levels/03_03.json" ) );
+            this._levels.push( new Level( this._worldRoot, "3-4", "assets/levels/03_04.json" ) );
+            this._levels.push( new Level( this._worldRoot, "3-5", "assets/levels/03_05.json" ) );
 
             this.setActiveLevel( this._levelIndex );
 
             this.initializeUI();
-
 
             // delta is 1 if running at 100% performance
             // creates frame-independent transformation
             this._application.ticker.add( function ( dt ) {
                 this.update( dt / 60 * 1000 ); // scale back by FPS
             }.bind( this ) );
-            this._application.ticker.elapsedMS
+
+            this.resizeHandler();
         }
 
         public onMessage( message: Message ): void {
             switch ( message.name ) {
+                case "START_GAME":
+                    this._isFading = true;
+                    this._fadeDirection = FadeDirection.OUT;
+                    this._levelCleared = true;
+                    this._setLevelFlag = true;
+                    this._nextLevelIndex = 0;
+                    this._isStartingGame = true;
+                    break;
+                case "GO_MAIN_MENU":
+                    this._isFading = true;
+                    this._fadeDirection = FadeDirection.OUT;
+                    this._levelCleared = true;
+                    this._setLevelFlag = true;
+                    this._nextLevelIndex = 0;
+                    this._isQuittingGame = true;
+                    break;
                 case "SUMMARY_CONTINUE":
                     this._isFading = true;
                     this._fadeDirection = FadeDirection.OUT;
                     this._levelCleared = true;
+                    break;
+                case "CHANGE_LEVEL":
+                    this._isFading = true;
+                    this._fadeDirection = FadeDirection.OUT;
+                    this._levelCleared = true;
+                    this._setLevelFlag = true;
+                    this._nextLevelIndex = message.context as number;
+                    break;
+                case "RESTART_LEVEL":
+                    this._isFading = true;
+                    this._fadeDirection = FadeDirection.OUT;
+                    this._levelCleared = true;
+                    this._setLevelFlag = true;
+                    this._nextLevelIndex = this._levelIndex;
                     break;
                 case "FADE_OUT":
                     this._isFading = true;
@@ -193,6 +274,18 @@ module BullShift {
 
         public static getActiveLevel(): Level {
             return g_game._activeLevel;
+        }
+
+        public resizeHandler(): void {
+            const scaleFactor = Math.min( window.innerWidth / 640, window.innerHeight / 480 );
+            const newWidth = Math.ceil( 640 * scaleFactor );
+            const newHeight = Math.ceil( 480 * scaleFactor );
+
+            this._renderer.view.style.width = `${newWidth}px`;
+            this._renderer.view.style.height = `${newHeight}px`;
+
+            this._renderer.resize( newWidth, newHeight );
+            this._application.stage.scale.set( scaleFactor );
         }
 
         private updateState( dt: number ): void {
@@ -252,7 +345,11 @@ module BullShift {
             // Create and load all screens.
             this._gameScreens[GameScreenName.PLAY_SCREEN] = new BullShift.PlayScreen( this._uiRoot );
             this._gameScreens[GameScreenName.PLAY_SCREEN].initialize();
-            this.setActiveGameScreen( GameScreenName.PLAY_SCREEN );
+
+            this._gameScreens[GameScreenName.MAIN_MENU] = new BullShift.MainMenuScreen( this._uiRoot );
+            this._gameScreens[GameScreenName.MAIN_MENU].initialize();
+
+            this.setActiveGameScreen( GameScreenName.MAIN_MENU );
         }
     }
 }

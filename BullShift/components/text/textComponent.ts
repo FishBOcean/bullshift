@@ -101,7 +101,7 @@
          */
         public set text( value: string ) {
             this._text = value;
-            if ( this._text !== undefined ) {
+            if ( this._textObj !== undefined ) {
                 this._textObj.text = this._text;
             }
         }

@@ -46,11 +46,16 @@
             this._scene.deactivate();
         }
 
-        public addButton( name: string, assetPath: string, callback: Function, x: number, y: number ): GameObject {
+        public createButton( name: string, assetPath: string, callback: Function, x: number, y: number ): GameObject {
             let obj = new GameObject( name );
             obj.addComponent( new UIButtonComponent( name, assetPath, callback ) );
             obj.x = x;
             obj.y = y;
+            return obj;
+        }
+
+        public addButton( name: string, assetPath: string, callback: Function, x: number, y: number ): GameObject {
+            let obj = this.createButton( name, assetPath, callback, x, y );
             this._scene.addObject( obj );
             return obj;
         }

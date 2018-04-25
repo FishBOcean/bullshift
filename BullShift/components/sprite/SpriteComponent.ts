@@ -122,6 +122,10 @@ module BullShift {
             return this._sprite.height;
         }
 
+        public enableMultiplyBlendMode() {
+            this._sprite.blendMode = PIXI.BLEND_MODES.MULTIPLY;
+        }
+
         /**
          * Initializes this component and links any depending components from those passed in.
          * @param components The components created from configuration.

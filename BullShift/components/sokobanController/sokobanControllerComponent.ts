@@ -268,9 +268,9 @@
                 // Load audio
                 this._music = document.createElement( "audio" );
                 if ( this._music.canPlayType( "audio/mpeg" ) ) {
-                    this._music.setAttribute( "src", "assets/Tambul.mp3" );
+                    this._music.setAttribute( "src", "assets/CountryGameLoop.mp3" );
                 } else {
-                    this._music.setAttribute( "src", "assets/Tambul.ogg" );
+                    this._music.setAttribute( "src", "assets/CountryGameLoop.ogg" );
                 }
                 this._music.loop = true;
                 
