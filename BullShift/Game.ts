@@ -38,7 +38,7 @@ module BullShift {
         private _fadeContainer: PIXI.Container;
         private _isFading: boolean = false;
         private _fadeDirection: FadeDirection = FadeDirection.IN;
-        private _fadeModAmount = 0.01;
+        private _fadeModAmount = 0.05;
         private _levelCleared: boolean = false;
         private _levelIndex: number = 0;
         private _nextLevelIndex: number = 0;

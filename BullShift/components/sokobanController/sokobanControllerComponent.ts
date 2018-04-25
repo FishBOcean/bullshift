@@ -267,6 +267,7 @@
 
                 // Load audio
                 this._music = document.createElement( "audio" );
+                this._music.volume = 0.5;
                 if ( this._music.canPlayType( "audio/mpeg" ) ) {
                     this._music.setAttribute( "src", "assets/CountryGameLoop.mp3" );
                 } else {

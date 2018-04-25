@@ -6,7 +6,7 @@ module BullShift {
      * A configuration object for use with sprite components.
      */
     export class SpriteComponentConfig implements IComponentConfig {
-
+        
         /**
          * The name of this configuration.
          */
@@ -58,6 +58,8 @@ module BullShift {
      * A component which renders a sprite to the screen.
      */
     export class SpriteComponent extends BaseGameObjectComponent implements IRenderableComponent {
+
+        protected _setMultiplyBlend: boolean = false;
 
         protected _sprite: PIXI.Sprite;
         protected _textureAsset: TextureAsset;
@@ -123,7 +125,11 @@ module BullShift {
         }
 
         public enableMultiplyBlendMode() {
-            this._sprite.blendMode = PIXI.BLEND_MODES.MULTIPLY;
+            if ( this._sprite !== undefined ) {
+                this._sprite.blendMode = PIXI.BLEND_MODES.MULTIPLY;
+            } else {
+                this._setMultiplyBlend = true;
+            }
         }
 
         /**
@@ -147,6 +153,10 @@ module BullShift {
          */
         public load(): void {
             this._sprite = new PIXI.Sprite( this._textureAsset.internalData as PIXI.Texture );
+            if ( this._setMultiplyBlend ) {
+                this._sprite.blendMode = PIXI.BLEND_MODES.MULTIPLY;
+                this._setMultiplyBlend = false;
+            }
         }
 
         /**
@@ -168,6 +178,10 @@ module BullShift {
          * @param dt The delta time since the last frame in milliseconds.
          */
         public update( dt: number ): void {
+            if ( this._setMultiplyBlend ) {
+                this._sprite.blendMode = PIXI.BLEND_MODES.MULTIPLY;
+                this._setMultiplyBlend = false;
+            }
         }
 
         /**

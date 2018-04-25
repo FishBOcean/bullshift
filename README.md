@@ -1,9 +1,9 @@
 # BullShift
 
-A HTML5 sokoban game. Currently this game is under construction. It is also a challenge to develop a game in less than 24 hours total time. To clarify, this means 24 hours of *development* time, not one calendar day.
+A HTML5 sokoban game. It was a challenge to develop a game in less than 24 hours total time. To clarify, this means 24 hours of *development* time, not one calendar day.
 
 ## Progress
-For now, I'll be keeping progress in a log format here. Eventually I will write up an article on this when the project is finished.
+Initially, I kept progress in a log format here. Coming soon is an article on this entire process.
 
 ### Hour Breakdown
 1. Project scaffolding, set up HTML/CSS and basic JS file. Inclusion of PIXI library and game loop setup.
@@ -28,3 +28,11 @@ For now, I'll be keeping progress in a log format here. Eventually I will write 
 20. Added keyboard input handler. Fixed screen fades. TextComponent added. Move counter added top play screen.
 21. Added UI elements to play screen. Added summary screen. Tweaked previous UI controls.
 22. Added audio, including music and effects. Added UI controls to mute SFX or music independently.
+23. Added options menu and ability to select level.
+24. Added remaining levels. Performed minor tweaks. DONE!
+
+## Still To Do
+1. Add more visual variety to the levels, especially tile sets.
+2. Character animations (including cattle)
+3. Cut scenes/story
+4. UI polish/animations

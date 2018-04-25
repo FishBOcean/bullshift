@@ -38,23 +38,23 @@ module BullShift {
 
             this._upCtrl = this.addButton( "upCtrl", 'assets/ctrl_up.png',
                 this.upPressed.bind( this ),
-                Game.TILE_SIZE * 2,
-                Game.screenHeight - ( Game.TILE_SIZE * 5 ) );
+                Game.TILE_SIZE * 3,
+                Game.screenHeight - ( Game.TILE_SIZE * 7 ) );
 
             this._downCtrl = this.addButton( "downCtrl", 'assets/ctrl_down.png',
                 this.downPressed.bind( this ),
-                Game.TILE_SIZE * 2,
+                Game.TILE_SIZE * 3,
                 Game.screenHeight - ( Game.TILE_SIZE * 3 ) );
 
             this._leftCtrl = this.addButton( "leftCtrl", 'assets/ctrl_left.png',
                 this.leftPressed.bind( this ),
                 Game.TILE_SIZE * 1,
-                Game.screenHeight - ( Game.TILE_SIZE * 4 ) );
+                Game.screenHeight - ( Game.TILE_SIZE * 5 ) );
 
             this._rightCtrl = this.addButton( "rightCtrl", 'assets/ctrl_right.png',
                 this.rightPressed.bind( this ),
-                Game.TILE_SIZE * 3,
-                Game.screenHeight - ( Game.TILE_SIZE * 4 ) );
+                Game.TILE_SIZE * 5,
+                Game.screenHeight - ( Game.TILE_SIZE * 5 ) );
 
             this.addTextControl( "levelTextCtrl", 160, Game.screenHeight - 27, "1" );
             this.addTextControl( "movesTextCtrl", 315, Game.screenHeight - 27, "0" );
